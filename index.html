@@ -41,11 +41,12 @@
 		let buffx = [];
 		let buffy = [];
 		let last = 0;
+		let last_undo = -1;
 		let alpha = 0;
 		let r = 0;
 		let g = 0;
 		let b = 0;
-		let undoImage;
+		let undoImage = [];
 		let pen = true;
 
 		rgbr.addEventListener("input", function (e) {
@@ -65,8 +66,10 @@
 		});
 
 		undo.addEventListener("pointerdown", function (e) {
-
-			ctx.putImageData(undoImage, 0, 0);
+			if (last_undo >= 0) {
+				ctx.putImageData(undoImage[last_undo], 0, 0);
+				last_undo--;
+			}
 		});
 
 		eraser.addEventListener("pointerdown", function (e) {
@@ -123,7 +126,12 @@
 				buffx.push(mouseX);
 				buffy.push(mouseY);
 				last++;
-				undoImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				if (last_undo + 1 == undoImage.length) {
+					undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+				} else {
+					undoImage[last_undo + 1] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				}
+				last_undo++;
 			}
 		});
 
