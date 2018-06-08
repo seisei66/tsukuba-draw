@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+		/* body {
+			overflow: hidden;
+		} */
+
+		canvas {
+			border: solid 1px black;
+		}
+	</style>
+
+</head>
+
+<body>
+	<canvas id="canvas" width="600" height="600"></canvas>
+	<input id="R" type="number" min="0" max="255" value="0"></input>
+	<input id="G" type="number" min="0" max="255" value="0"></input>
+	<input id="B" type="number" min="0" max="255" value="0"></input>
+	<button id="reset" type="button">リセット</button>
+	<button id="undo" type="button">undo</button>
+	<button id="eraser" type="button">消しゴム</button>
+	<script>
+		let canvas = document.getElementById("canvas");
+		let ctx = canvas.getContext("2d");
+		let reset = document.getElementById("reset");
+		let rgbr = document.getElementById("R");
+		let rgbg = document.getElementById("G");
+		let rgbb = document.getElementById("B");
+		let undo = document.getElementById("undo");
+		let eraser = document.getElementById("eraser");
+
+		let mouseX, mouseY, mouseX1, mouseY1;
+		let draw_f = false;
+		let buffx = [];
+		let buffy = [];
+		let last = 0;
+		let alpha = 0;
+		let r = 0;
+		let g = 0;
+		let b = 0;
+		let undoImage;
+		let pen = true;
+
+		rgbr.addEventListener("input", function (e) {
+			r = Number(e.target.value);
+		});
+
+		rgbg.addEventListener("input", function (e) {
+			g = Number(e.target.value);
+		});
+
+		rgbb.addEventListener("input", function (e) {
+			b = Number(e.target.value);
+		});
+
+		reset.addEventListener("pointerdown", function (e) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		});
+
+		undo.addEventListener("pointerdown", function (e) {
+
+			ctx.putImageData(undoImage, 0, 0);
+		});
+
+		eraser.addEventListener("pointerdown", function (e) {
+			console.log(e);
+			if (pen) {
+				e.target.innerHTML = "ペン";
+			} else {
+				e.target.innerHTML = "消しゴム";
+			}
+			pen = !pen;
+		});
+
+
+		canvas.addEventListener("pointermove", function (e) {
+			mouseX = e.pageX;
+			mouseY = e.pageY;
+			if (e.pointerType === "pen") {
+				alpha = e.pressure;
+			} else {
+				alpha = 1;
+			}
+
+			if (draw_f === true) {
+				buffx.push(mouseX);
+				buffy.push(mouseY);
+				mouseX1 = mouseX;
+				mouseY1 = mouseY;
+
+				ctx.beginPath();
+				if (pen) {
+					ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
+					ctx.lineWidth = 1;
+					ctx.globalCompositeOperation = 'source-over';
+				} else {
+					ctx.strokeStyle = "rgba(255,255,255,1)";
+					ctx.lineWidth = 20;
+					ctx.globalCompositeOperation = 'destination-out';
+				}
+				ctx.moveTo(buffx[last - 1], buffy[last - 1]);
+				ctx.lineTo(buffx[last], buffy[last]);
+				ctx.lineCap = "round";
+				ctx.stroke();
+				mouseX1 = mouseX;
+				mouseY1 = mouseY;
+				last++;
+			}
+		});
+
+		canvas.addEventListener("pointerdown", function (e) {
+			if (!draw_f) {
+				draw_f = true;
+				mouseX = e.pageX;
+				mouseY = e.pageY;
+				buffx.push(mouseX);
+				buffy.push(mouseY);
+				last++;
+				undoImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			}
+		});
+
+		canvas.addEventListener("pointerup", function (e) {
+			if (draw_f) {
+				draw_f = false;
+			}
+		});
+
+	</script>
+</body>
+
+</html>
