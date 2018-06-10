@@ -22,6 +22,7 @@
 	<button id="reset" type="button">リセット</button>
 	<button id="undo" type="button">undo</button>
 	<button id="eraser" type="button">消しゴム</button>
+	<a href="#" class="button" id="download" download="download.png">Download</a>
 	<script>
 		let canvas = document.getElementById("canvas");
 		let ctx = canvas.getContext("2d");
@@ -84,6 +85,11 @@
 			pen = !pen;
 		});
 
+		let download = document.getElementById("download").addEventListener("pointerdown", function (e) {
+			var can = canvas.toDataURL("image/png");
+			console.log(e);
+			e.target.href = can;
+		});
 
 		canvas.addEventListener("pointermove", function (e) {
 			mouseX = e.pageX;
