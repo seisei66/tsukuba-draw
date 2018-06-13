@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>チャットルーム</title>
+    <!-- /* socket.ioのjsを読み込む */ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Paytone+One|Source+Sans+Pro:300,700" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link href="style2.css" rel="stylesheet">-->
+    srcSocket = process.env.PORT + socket.io/socket.io.js;
+    <script type="text/javascript" src=srcSocket></script>
+    <script type="text/javascript">
+      var socket, emit;
+      (function(){
+          // socket通信が開始される
+          socket = io.connect(process.env.PORT);
+          emit = function (name, data){
+          // json → 文字列に変換して送信する関数
+            socket.emit(name, JSON.stringify(data));
+          }
+      })();
+      window.onload = function(){
+        var sendBtn = document.getElementById('send');
+        var message = document.getElementById('message');
+        sendBtn.addEventListener("click", function(){
+          emit('message', {text: message.value});
+        });
+        socket.on('receiveMessage', function(d){
+          var data = JSON.parse(d), // 文字列→JSON
+          li = document.createElement('li'), // liタグ作成
+          list = document.getElementById('messageList'); // ulタグの取得
+        li.textContent = data.text; // liタグに値を入れる
+        list.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
+        });
+
+    </script>
+</head>
+<body>
+  <div>
+      <div class="site">
+    	<div class="circle"></div>
+    	<div class="circle"></div>
+    	<div class="circle"></div>
+    	<p>ILLAST SPACE</p>
+    	<div class="circle"></div>
+    	<div class="circle"></div>
+    	<div class="circle"></div>
+    </div>
+    <nav class="menu">
+    	<ul>
+    		<li></li>
+    		<li>ele</li>
+    		<li>pink</li>
+    	</ul>
+    </nav>
+
+    <canvas id="canvas" width="700px" height="700px"></canvas>
+
+    <div id="chat">
+      <textarea id="message" rows="4" cols="40"></textarea>
+      <button type="button" id="send">Send</button>
+    	<div id="log"><ul id="messageList"></ul></div>
+    	<div id="clients"></div>
+    	<div id="commands"></div>
+    </div>
+      </div>
+
+</body>
+</html>
