@@ -33,14 +33,17 @@
 	</div>
 	<canvas id="canvas" width="600" height="600"></canvas>
 	<div class="colors">
-	<input id="R" type="number" min="0" max="255" value="0"></input>
-	<input id="G" type="number" min="0" max="255" value="0"></input>
-	<input id="B" type="number" min="0" max="255" value="0"></input>
-	<button id="reset" type="button">リセット</button>
-	<button id="undo" type="button">undo</button>
-	<button id="eraser" type="button">消しゴム</button>
-</div>
-<p>線の太さ<input type="range" min="0" max="100" value="10" id="lineWidth"><span id="lineNum">10</span></p>
+		<input id="R" type="number" min="0" max="255" value="0"></input>
+		<input id="G" type="number" min="0" max="255" value="0"></input>
+		<input id="B" type="number" min="0" max="255" value="0"></input>
+		<button id="reset" type="button">リセット</button>
+		<button id="undo" type="button">undo</button>
+		<button id="eraser" type="button">消しゴム</button>
+	</div>
+	<p>線の太さ
+		<input type="range" min="1" max="50" value="10" id="lineWidth">
+		<span id="lineNum">10</span>
+	</p>
 	<script>
 		let canvas = document.getElementById("canvas");
 		let ctx = canvas.getContext("2d");
@@ -103,7 +106,7 @@
 			if (e.pointerType === "pen") {
 				alpha = e.pressure;
 			} else {
-				alpha = 1;
+				alpha = 0.1;
 			}
 
 			if (draw_f === true) {
@@ -112,11 +115,19 @@
 				mouseX1 = mouseX;
 				mouseY1 = mouseY;
 
-				ctx.beginPath();
 				if (pen) {
+					// ctx.beginPath();
+					// ctx.strokeStyle = "rgba(255,255,255,1)";
+					// ctx.globalCompositeOperation = 'destination-out';
+					// ctx.moveTo(buffx[last - 1], buffy[last - 1]);
+					// ctx.lineTo(buffx[last], buffy[last]);
+					// ctx.lineCap = "round";
+					// ctx.stroke();
+					ctx.beginPath();
 					ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
 					ctx.globalCompositeOperation = 'source-over';
 				} else {
+					ctx.beginPath();
 					ctx.strokeStyle = "rgba(255,255,255,1)";
 					ctx.globalCompositeOperation = 'destination-out';
 				}
@@ -124,6 +135,14 @@
 				ctx.lineTo(buffx[last], buffy[last]);
 				ctx.lineCap = "round";
 				ctx.stroke();
+				// if (pen) {
+				// 	ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
+				// 	ctx.globalCompositeOperation = 'source-over';
+
+				// }
+				// ctx.beginPath();
+				// ctx.arc(mouseX, mouseY, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
+				// ctx.stroke();
 				mouseX1 = mouseX;
 				mouseY1 = mouseY;
 				last++;
@@ -149,9 +168,9 @@
 			}
 		});
 
-		lineWidth.addEventListener("mousemove",function(){
-		var lineNum = document.getElementById("lineWidth").value;
-		document.getElementById("lineNum").innerHTML = lineNum;
+		lineWidth.addEventListener("mousemove", function () {
+			var lineNum = document.getElementById("lineWidth").value;
+			document.getElementById("lineNum").innerHTML = lineNum;
 		});
 	</script>
 	<div id="chat">
