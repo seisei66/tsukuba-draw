@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+body  {display: grid;
+      grid-template-areas:
+                "head head head"
+                "side1 main side2";
+      grid-template-columns: 1fr 5fr 3fr;
+       margin: 0;
+       font-family: 'Source Sans Pro', 'メイリオ',
+       'Hiragino Kaku Gothic Pro', sans-serif
+       }
+
+.site  {
+       display: flex;
+       grid-area: head;
+       background-color: #cf6766;
+       padding: 10px;
+       text-align: center}
+
+.site p  {color: #ffffff;
+          font-size: 40px;
+          margin: 0;
+          font-family: 'Paytone One', sans-serif;
+          text-decoration: none;}
+
+.site div { width: 40px;
+            height: 40px;
+            margin: 10px;
+            border-radius: 50%;
+            background: white;}
+
+.menu  {grid-area: side1;
+        padding: 20px 0;
+        background-color: #f0f0e9;}
+
+.menu ul{margin: 0;
+         padding: 0;
+         list-style: none;}
+
+.menu li{display: block;
+         margin-bottom: 15px;
+         padding: 5px;
+         background-color: #c60019;
+         color: #ffffff;
+         font-size: 14px;
+         text-decoration: none;
+         list-style: none;}
+
+.menu li:hover   {background-color: #662222;}
+#canvas {
+  grid-area: main;
+}
+#chat {
+  grid-area: side2;
+  background-color: #dbdf19;
+}

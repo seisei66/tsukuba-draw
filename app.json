@@ -1,0 +1,7 @@
+{
+  "name": "tsukuba-draw",
+  "description": "super paint chat!!!",
+  "logo": "",
+  "keywords": ["node"],
+  "image": "heroku/nodejs"
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Paytone+One|Source+Sans+Pro:300,700" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/public/stylesheets/style2.css" rel="stylesheet">
+	<title>●○●CHAT ROOM●○●</title>
+</head>
+<body>
+<div class="site">
+	<div class="circle"></div>
+	<div class="circle"></div>
+	<div class="circle"></div>
+	<p>ILLAST SPACE</p>
+	<div class="circle"></div>
+	<div class="circle"></div>
+	<div class="circle"></div>
+</div>
+<nav class="menu">
+	<ul>
+		<li></li>
+		<li>ele</li>
+		<li>pink</li>
+	</ul>
+</nav>
+
+<canvas id="canvas" width="700px" height="700px"></canvas>
+
+<div id="chat">
+	<div id="log"></div>
+	<div id="clients"></div>
+	<div id="commands"></div>
+</div>
+
+
+</body>
+</html>

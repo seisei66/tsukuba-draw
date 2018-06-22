@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link href="https://fonts.googleapis.com/css?family=Paytone+One|Source+Sans+Pro:300,700" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/public/stylesheets/style2.css" rel="stylesheet">
+	<title>●○●CHAT ROOM●○●</title>
+	<style>
+		/* body {
+			overflow: hidden;
+		} */
+
+		canvas {
+			border: solid 1px black;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="site">
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<p>ILLAST SPACE</p>
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<div class="circle"></div>
+	</div>
+	<canvas id="canvas" width="600" height="600"></canvas>
+	<div class="colors">
+		<input id="R" type="number" min="0" max="255" value="0"></input>
+		<input id="G" type="number" min="0" max="255" value="0"></input>
+		<input id="B" type="number" min="0" max="255" value="0"></input>
+		<button id="reset" type="button">リセット</button>
+		<button id="undo" type="button">undo</button>
+		<button id="eraser" type="button">消しゴム</button>
+	</div>
+	<p>線の太さ
+		<input type="range" min="1" max="50" value="10" id="lineWidth">
+		<span id="lineNum">10</span>
+	</p>
+	<script>
+		let canvas = document.getElementById("canvas");
+		let ctx = canvas.getContext("2d");
+		let reset = document.getElementById("reset");
+		let rgbr = document.getElementById("R");
+		let rgbg = document.getElementById("G");
+		let rgbb = document.getElementById("B");
+		let undo = document.getElementById("undo");
+		let eraser = document.getElementById("eraser");
+
+		let mouseX, mouseY, mouseX1, mouseY1;
+		let draw_f = false;
+		let buffx = [];
+		let buffy = [];
+		let last = 0;
+		let last_undo = -1;
+		let alpha = 0;
+		let r = 0;
+		let g = 0;
+		let b = 0;
+		let undoImage = [];
+		let pen = true;
+
+		rgbr.addEventListener("input", function (e) {
+			r = Number(e.target.value);
+		});
+
+		rgbg.addEventListener("input", function (e) {
+			g = Number(e.target.value);
+		});
+
+		rgbb.addEventListener("input", function (e) {
+			b = Number(e.target.value);
+		});
+
+		reset.addEventListener("pointerdown", function (e) {
+			if (last_undo + 1 == undoImage.length) {
+				undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+			} else {
+				undoImage[last_undo + 1] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			}
+			last_undo++;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		});
+
+		undo.addEventListener("pointerdown", function (e) {
+			if (last_undo >= 0) {
+				ctx.putImageData(undoImage[last_undo], 0, 0);
+				last_undo--;
+			}
+		});
+
+		eraser.addEventListener("pointerdown", function (e) {
+			console.log(e);
+			if (pen) {
+				e.target.innerHTML = "ペン";
+			} else {
+				e.target.innerHTML = "消しゴム";
+			}
+			pen = !pen;
+		});
+
+
+		canvas.addEventListener("pointermove", function (e) {
+			var rect = e.target.getBoundingClientRect();
+			ctx.lineWidth = document.getElementById("lineWidth").value;
+			mouseX = e.clientX - rect.left;
+			mouseY = e.clientY - rect.top;
+			if (e.pointerType === "pen") {
+				alpha = e.pressure / 5;
+			} else {
+				alpha = 0.1;
+			}
+
+			if (draw_f === true) {
+				buffx.push(mouseX);
+				buffy.push(mouseY);
+				mouseX1 = mouseX;
+				mouseY1 = mouseY;
+
+				if (pen) {
+					// ctx.beginPath();
+					// ctx.strokeStyle = "rgba(255,255,255,1)";
+					// ctx.globalCompositeOperation = 'destination-out';
+					// ctx.moveTo(buffx[last - 1], buffy[last - 1]);
+					// ctx.lineTo(buffx[last], buffy[last]);
+					// ctx.lineCap = "round";
+					// ctx.stroke();
+					//ctx.beginPath();
+					ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
+					ctx.fillStyle = "rgba(" + [r, g, b, alpha] + ")";
+					ctx.globalCompositeOperation = 'source-over';
+				} else {
+					//ctx.beginPath();
+					ctx.strokeStyle = "rgba(255,255,255,1)";
+					ctx.globalCompositeOperation = 'destination-out';
+				}
+				let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 1], 2) + Math.pow(buffy[last] - buffy[last - 1], 2));
+				j = Math.ceil(j);
+				for (let i = 0; i < j; i++) {
+					ctx.beginPath();
+					ctx.arc(buffx[last - 1] + (buffx[last] - buffx[last - 1]) / j * i, buffy[last - 1] + (buffy[last] - buffy[last - 1]) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
+					ctx.stroke();
+				}
+				// ctx.moveTo(buffx[last - 1], buffy[last - 1]);
+				// ctx.lineTo(buffx[last], buffy[last]);
+				// ctx.lineCap = "round";
+
+				// ctx.stroke();
+				mouseX1 = mouseX;
+				mouseY1 = mouseY;
+				last++;
+			}
+		});
+
+		canvas.addEventListener("pointerdown", function (e) {
+			if (!draw_f) {
+				draw_f = true;
+				var rect = e.target.getBoundingClientRect();
+				mouseX = e.clientX - rect.left;
+				mouseY = e.clientY - rect.top;
+				buffx.push(mouseX);
+				buffy.push(mouseY);
+				last++;
+				if (last_undo + 1 == undoImage.length) {
+					undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+				} else {
+					undoImage[last_undo + 1] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				}
+				last_undo++;
+			}
+		});
+
+		canvas.addEventListener("pointerup", function (e) {
+			if (draw_f) {
+				draw_f = false;
+			}
+		});
+
+		lineWidth.addEventListener("mousemove", function () {
+			var lineNum = document.getElementById("lineWidth").value;
+			document.getElementById("lineNum").innerHTML = lineNum;
+		});
+	</script>
+	<div id="chat">
+		<div id="log"></div>
+		<div id="clients"></div>
+		<div id="commands"></div>
+	</div>
+
+</body>
+
+</html>

@@ -1,1 +1,1 @@
-web: node chat/index.js
+web: node ./bin/www
