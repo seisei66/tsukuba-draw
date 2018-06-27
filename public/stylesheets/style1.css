@@ -20,8 +20,8 @@ body{
   text-align: center;
   vertical-align: middle;
   overflow: hidden;
-  background-image: -webkit-linear-gradient(45deg, #FF00BF 0%, #F5A9D0 100%);
-  background-image: linear-gradient(45deg, #FF00BF 0%, #F5A9D0 100%);
+  background-image: -webkit-linear-gradient(45deg, #FF00BF 0%, #FFFF00 100%);
+  background-image: linear-gradient(45deg, #FF00BF 0%, #FFFF00 100%);
   transition: .4s;
 }
 
