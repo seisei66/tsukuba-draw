@@ -49,7 +49,7 @@
 			})
 
 			socket.on("chat message", data => {
-		//		var chatdata = JSON.parse(data);
+			//var chatdata = JSON.parse(data);
 				var li = document.createElement('li');// liタグ作成
 				li.innerText = data; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
