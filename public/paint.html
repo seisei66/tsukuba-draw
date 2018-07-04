@@ -29,11 +29,15 @@
 	<script>
 		var hostname = location.hostname;
 		var socket = io();
+		emit = function (name, data){
+      // json → 文字列に変換して送信する関数
+      socket.emit(name, JSON.stringify(data));
+    };
 
 		window.onload = function(){
 			//chat
-			var form = document.getElementById("textarea");
-			var msg = document.getElementById("msg");
+//			var form = document.getElementById("textarea");
+			var msg = document.getElementById("chatarea");
 			var msgList = document.getElementById("msgList");
 			var send = document.getElementById("send");
 		/*
@@ -43,15 +47,18 @@
 				msg.value("");
 			};
 			*/
-			send.addEventListener("change",function(e) {
-				socket.emit("chat message", msg.value);
-				msg.value("");
+
+			send.addEventListener("click",function(e) {
+				console.log(msg.value);
+				socket.emit("chat message", {text: msg.value});
+				msg.value = "";
 			})
 
 			socket.on("chat message", data => {
-			//var chatdata = JSON.parse(data);
+				console.log(data);
+//			　var d = JSON.parse(data);
 				var li = document.createElement('li');// liタグ作成
-				li.innerText = data; // liタグに値を入れる
+				li.innerText = data.text; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
 			});
 
@@ -86,7 +93,7 @@
 		<span id="lineNum">10</span>
 	</p>
 	<div id="chat">
-		<textarea name="" id="textarea" cols="15" rows="3"></textarea>
+		<textarea name="chatarea" id="chatarea" cols="15" rows="3" placeholder="CHAT AREA"></textarea>
 		<button id="send" type="button">SEND</button>
 		<div id="log"><ul id="msgList"></ul></div>
 	</div>

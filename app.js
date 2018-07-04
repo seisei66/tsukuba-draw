@@ -129,9 +129,9 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
   // この中でデータのやり取りを行う
   // 「message」という名前で受信したデータはこの中を通る
-  socket.on('message', function(msgData){
+  socket.on('chat message', function(msgData){
     // そのまま全接続先へ送信
-    io.emit('receiveMessage', msgData);
+    io.emit('chat message', msgData);
   });
   socket.on('draw', function(drawData){
     io.emit('draw', drawData);
