@@ -51,6 +51,7 @@ body  {display: grid;
   grid-area: main;
 }
 #chat {
+  display: grid;
+/*  background-color: #dbdf19;*/
   grid-area: side2;
-  background-color: #dbdf19;
 }

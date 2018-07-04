@@ -6,9 +6,93 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var io = require('./routes/io')
+//var io = require('./routes/io.js');
 
+var http = require('http');
+var debug = require('debug')('tk-draw:server');
 var app = express();
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,7 +106,6 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/io', io);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -40,4 +123,31 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+var io = require('socket.io').listen(server);
+
+//接続確立時の処理
+io.sockets.on('connection', function (socket) {
+  // この中でデータのやり取りを行う
+  // 「message」という名前で受信したデータはこの中を通る
+  socket.on('message', function(msgData){
+    // そのまま全接続先へ送信
+    io.emit('receiveMessage', msgData);
+  });
+  socket.on('draw', function(drawData){
+    io.emit('draw', drawData);
+  });
+});
+/*
+function io(server) {
+    var io = socketio.listen(server);
+
+    io.on('connection', socket => {
+      socket.on('chat message', msg => {
+        io.emit('chat message', msg);
+      });
+    });
+}
+
+io(server);
+*/
+//module.exports = app;

@@ -18,6 +18,47 @@
 			border: solid 1px black;
 		}
 	</style>
+	<!--
+	<script id=io type="text/javascript" src="">
+		var hostname = location.hostname;
+		var path = path.join(hostname, 'socket.io', 'socket.io.js');
+		document.getElementById("io").src = path;
+	</script>
+-->
+	<script src="../socket.io/socket.io.js"></script>
+	<script>
+		var hostname = location.hostname;
+		var socket = io();
+
+		window.onload = function(){
+			//chat
+			var form = document.getElementById("textarea");
+			var msg = document.getElementById("msg");
+			var msgList = document.getElementById("msgList");
+			var send = document.getElementById("send");
+		/*
+			send.onclick = function() {
+		//		var msgjson = JSON.stringify(msg.value());
+				socket.emit("chat message", msg.value);
+				msg.value("");
+			};
+			*/
+			send.addEventListener("change",function(e) {
+				socket.emit("chat message", msg.value);
+				msg.value("");
+			})
+
+			socket.on("chat message", data => {
+		//		var chatdata = JSON.parse(data);
+				var li = document.createElement('li');// liタグ作成
+				li.innerText = data; // liタグに値を入れる
+				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
+			});
+
+			//chatここまで
+		};
+	</script>
+
 
 </head>
 
@@ -44,7 +85,16 @@
 		<input type="range" min="1" max="50" value="10" id="lineWidth">
 		<span id="lineNum">10</span>
 	</p>
+	<div id="chat">
+		<textarea name="" id="textarea" cols="15" rows="3"></textarea>
+		<button id="send" type="button">SEND</button>
+		<div id="log"><ul id="msgList"></ul></div>
+		<div id="clients"></div>
+	</div>
 	<script>
+
+
+
 		let canvas = document.getElementById("canvas");
 		let ctx = canvas.getContext("2d");
 		let reset = document.getElementById("reset");
