@@ -10,60 +10,115 @@
 	<link href="/public/stylesheets/style2.css" rel="stylesheet">
 	<title>●○●CHAT ROOM●○●</title>
 	<style>
-		/* body {
-			overflow: hidden;
-		} */
-
 		canvas {
 			border: solid 1px black;
 		}
+
+		/* #layer {
+			position: relative;
+		}
+
+		#canvas1 {
+			position: absolute;
+			z-index: 0;
+		}
+
+		#canvas2 {
+			position: absolute;
+			z-index: 1;
+		}
+
+		#canvas3 {
+			position: absolute;
+			z-index: 2;
+		}
+
+		#canvas4 {
+			position: absolute;
+			z-index: 3;
+		}
+
+		#canvas5 {
+			position: absolute;
+			z-index: 4;
+		}
+
+		#canvas6 {
+			position: absolute;
+			z-index: 5;
+		}
+
+		#canvas7 {
+			position: absolute;
+			z-index: 6;
+		}
+
+		#canvas8 {
+			position: absolute;
+			z-index: 7;
+		}
+
+		#canvas9 {
+			position: absolute;
+			z-index: 8;
+		}
+
+		#canvas10 {
+			position: absolute;
+			z-index: 9;
+		} */
 	</style>
 	<!--
-	<script id=io type="text/javascript" src="">
-		var hostname = location.hostname;
-		var path = path.join(hostname, 'socket.io', 'socket.io.js');
-		document.getElementById("io").src = path;
-	</script>
--->
+		<script id=io type="text/javascript" src="">
+			var hostname = location.hostname;
+			var path = path.join(hostname, 'socket.io', 'socket.io.js');
+			document.getElementById("io").src = path;
+		</script>
+	-->
 	<script src="../socket.io/socket.io.js"></script>
 	<script>
 		var hostname = location.hostname;
 		var socket = io();
-		emit = function (name, data){
-      // json → 文字列に変換して送信する関数
-      socket.emit(name, JSON.stringify(data));
-    };
+		emit = function (name, data) {
+			// json → 文字列に変換して送信する関数
+			socket.emit(name, JSON.stringify(data));
+		};
 
-		window.onload = function(){
+		window.onload = function () {
 			//chat
-//			var form = document.getElementById("textarea");
+			//			var form = document.getElementById("textarea");
 			let msg = document.getElementById("chatarea");
 			let msgList = document.getElementById("msgList");
 			let send = document.getElementById("send");
 			let popupBtn = document.getElementById("popup_btn");
 			let popup = document.getElementById("popup");
 
-		/*
-			send.onclick = function() {
-		//		var msgjson = JSON.stringify(msg.value());
-				socket.emit("chat message", msg.value);
-				msg.value("");
-			};
-			*/
-			let user = window.prompt("ユーザー名を入力してください","");
+			/*
+				send.onclick = function() {
+			//		var msgjson = JSON.stringify(msg.value());
+					socket.emit("chat message", msg.value);
+					msg.value("");
+				};
+				*/
+			let user = window.prompt("ユーザー名を入力してください", "");
 			//if(user == NULL) location.href="/public/inde.html";
 			socket.emit("username", user);//動作確認してない
 
-			socket.on("connect", function(){
+			socket.on("connect", function () {
 				socket.on("userlist", userlist => {
 					let peoplelist = userlist;
 				})
 			})
 
+<<<<<<< HEAD
 			send.addEventListener("click", e => {
 				if(msg.value != ""){
+=======
+			send.addEventListener("click", function (e) {
+				if (msg.value != "") {
+>>>>>>> 03a655327a467becf2210ca43d109660629dbf6c
 					socket.emit("chat message", msg.value);
-					console.log({text: msg.value});
+					console.log({ text: msg.value });
 					console.log(msg.value);
 					msg.value = "";
 				}
@@ -81,6 +136,11 @@
 			});
 
 			socket.on("chat message", data => {
+<<<<<<< HEAD
+=======
+				console.log(data);
+				//			　var d = JSON.parse(data);
+>>>>>>> 03a655327a467becf2210ca43d109660629dbf6c
 				let li = document.createElement('li');// liタグ作成
 				li.innerText = data; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
@@ -101,8 +161,6 @@
 			//chatここまで
 		};
 	</script>
-
-
 </head>
 
 <body>
@@ -114,15 +172,25 @@
 		<div class="circle"></div>
 		<div class="circle"></div>
 		<div class="circle"></div>
-<!--		<button type="button" name="popup_btn">Input your name</button>-->
 	</div>
-	<canvas id="canvas" width="600" height="600"></canvas>
+	<!--		<button type="button" name="popup_btn">Input your name</button>-->
+	<div id=layer>
+		<canvas id="canvas1" width="600" height="600"></canvas>
+		<canvas id="canvas2" width="600" height="600"></canvas>
+		<canvas id="canvas3" width="600" height="600"></canvas>
+		<canvas id="canvas4" width="600" height="600"></canvas>
+		<canvas id="canvas5" width="600" height="600"></canvas>
+		<canvas id="canvas6" width="600" height="600"></canvas>
+		<canvas id="canvas7" width="600" height="600"></canvas>
+		<canvas id="canvas8" width="600" height="600"></canvas>
+		<canvas id="canvas9" width="600" height="600"></canvas>
+		<canvas id="canvas10" width="600" height="600"></canvas>
+	</div>
 	<div class="colors">
 		<input id="R" type="number" min="0" max="255" value="0"></input>
 		<input id="G" type="number" min="0" max="255" value="0"></input>
 		<input id="B" type="number" min="0" max="255" value="0"></input>
 		<button id="reset" type="button">リセット</button>
-		<button id="undo" type="button">undo</button>
 		<button id="eraser" type="button">消しゴム</button>
 	</div>
 	<p>線の太さ
@@ -132,30 +200,31 @@
 	<div id="chat">
 		<textarea name="chatarea" id="chatarea" cols="15" rows="3" placeholder="CHAT AREA"></textarea>
 		<button id="send" type="button">SEND</button>
-		<div id="log"><ul id="msgList"></ul></div>
+		<div id="log">
+			<ul id="msgList"></ul>
+		</div>
 	</div>
 
-
-
-
 	<script>
-
-
-
-		let canvas = document.getElementById("canvas");
+		let layer = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
+		let canvas = layer[0];
 		let ctx = canvas.getContext("2d");
 		let reset = document.getElementById("reset");
 		let rgbr = document.getElementById("R");
 		let rgbg = document.getElementById("G");
 		let rgbb = document.getElementById("B");
-		let undo = document.getElementById("undo");
 		let eraser = document.getElementById("eraser");
 
-		let mouseX, mouseY, mouseX1, mouseY1;
+		let pixel_data = [];
+		let bef_pix;
+		let af_pix;
+
+		let mouseX, mouseY;
 		let draw_f = false;
 		let buffx = [];
 		let buffy = [];
 		let last = 0;
+		let _last = 0;
 		let last_undo = -1;
 		let alpha = 0;
 		let r = 0;
@@ -163,6 +232,7 @@
 		let b = 0;
 		let undoImage = [];
 		let pen = true;
+		let esc = 0;
 
 		rgbr.addEventListener("input", function (e) {
 			r = Number(e.target.value);
@@ -186,13 +256,6 @@
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 		});
 
-		undo.addEventListener("pointerdown", function (e) {
-			if (last_undo >= 0) {
-				ctx.putImageData(undoImage[last_undo], 0, 0);
-				last_undo--;
-			}
-		});
-
 		eraser.addEventListener("pointerdown", function (e) {
 			console.log(e);
 			if (pen) {
@@ -210,61 +273,121 @@
 			mouseX = e.clientX - rect.left;
 			mouseY = e.clientY - rect.top;
 			if (e.pointerType === "pen") {
-				alpha = e.pressure / 5;
+				alpha = e.pressure / 2;
+				ctx.lineWidth = document.getElementById("lineWidth").value * e.pressure;
 			} else {
-				alpha = 0.1;
+				alpha = 0.05;
 			}
-
 			if (draw_f === true) {
+				draw(e);
+			}
+			layer[1] = layer[0];
+		});
+
+		function draw(e) {
+			if (Math.sqrt(Math.pow(buffx[last - 1] - mouseX, 2) + Math.pow(buffy[last - 1] - mouseY, 2)) > 5) {
 				buffx.push(mouseX);
 				buffy.push(mouseY);
-				mouseX1 = mouseX;
-				mouseY1 = mouseY;
 
 				if (pen) {
-					// ctx.beginPath();
-					// ctx.strokeStyle = "rgba(255,255,255,1)";
-					// ctx.globalCompositeOperation = 'destination-out';
-					// ctx.moveTo(buffx[last - 1], buffy[last - 1]);
-					// ctx.lineTo(buffx[last], buffy[last]);
-					// ctx.lineCap = "round";
-					// ctx.stroke();
-					//ctx.beginPath();
-					ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
+					ctx.strokeStyle = "rgba(0,0,0,0)";
 					ctx.fillStyle = "rgba(" + [r, g, b, alpha] + ")";
 					ctx.globalCompositeOperation = 'source-over';
 				} else {
-					//ctx.beginPath();
 					ctx.strokeStyle = "rgba(255,255,255,1)";
 					ctx.globalCompositeOperation = 'destination-out';
 				}
-				let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 1], 2) + Math.pow(buffy[last] - buffy[last - 1], 2));
-				j = Math.ceil(j);
-				for (let i = 0; i < j; i++) {
-					ctx.beginPath();
-					ctx.arc(buffx[last - 1] + (buffx[last] - buffx[last - 1]) / j * i, buffy[last - 1] + (buffy[last] - buffy[last - 1]) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
-					ctx.stroke();
-				}
-				// ctx.moveTo(buffx[last - 1], buffy[last - 1]);
-				// ctx.lineTo(buffx[last], buffy[last]);
-				// ctx.lineCap = "round";
+				if (last > 1 && Math.sqrt(Math.pow(buffx[last] - buffx[last - 1], 2) + Math.pow(buffy[last] - buffy[last - 1], 2)) > 1) {
+					let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 1], 2) + Math.pow(buffy[last] - buffy[last - 1], 2));
+					j = Math.ceil(j);
+					for (let i = 1; i <= j; i++) {
+						ctx.beginPath();
+						ctx.arc(buffx[last - 1] + (buffx[last] - buffx[last - 1]) / j * i, buffy[last - 1] + (buffy[last] - buffy[last - 1]) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
+						ctx.fill();
+						ctx.stroke();
 
-				// ctx.stroke();
-				mouseX1 = mouseX;
-				mouseY1 = mouseY;
+					}
+				}
 				last++;
 			}
-		});
+		}
+
+		function calc(p0, p1, p2, p3, t) {
+			let v0 = (1 - t) * (1 - t) * (1 - t) * p0;
+			let v1 = 3 * t * (1 - t) * (1 - t) * p1;
+			let v2 = 3 * t * t * (1 - t) * p2;
+			let v3 = t * t * t * p3;
+
+			return v0 + v1 + v2 + v3;
+		}
+
+		function _draw(e) {
+
+			buffx.push(mouseX);
+			buffy.push(mouseY);
+
+			if (pen) {
+				//ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
+				ctx.strokeStyle = "rgba(0,0,0,0)";
+				ctx.fillStyle = "rgba(" + [r, g, b, alpha] + ")";
+				ctx.globalCompositeOperation = 'source-over';
+			} else {
+				ctx.strokeStyle = "rgba(255,255,255,1)";
+				ctx.globalCompositeOperation = 'destination-out';
+			}
+			if (_last % 3 == 0) {
+				// let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 1], 2) + Math.pow(buffy[last] - buffy[last - 1], 2)) + Math.sqrt(Math.pow(buffx[last - 2] - buffx[last - 1], 2) + Math.pow(buffy[last - 2] - buffy[last - 1], 2));
+				// j = Math.ceil(j);
+				let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 3], 2) + Math.pow(buffy[last] - buffy[last - 3], 2));
+				j = Math.ceil(j);
+				let div = j;
+				let delta_t = 1.0 / div;
+				for (let i = 1; i < div; i++) {
+					let t0 = i / div;
+					let t1 = t0 + delta_t;
+
+					let px0 = calc(buffx[last - 3], buffx[last - 2], buffx[last - 1], buffx[last], t0);
+					let py0 = calc(buffy[last - 3], buffy[last - 2], buffy[last - 1], buffy[last], t0);
+
+					let px1 = calc(buffx[last - 3], buffx[last - 2], buffx[last - 1], buffx[last], t1);
+					let py1 = calc(buffy[last - 3], buffy[last - 2], buffy[last - 1], buffy[last], t1);
+					//console.log(px0);
+					// let j = Math.ceil(Math.sqrt(Math.pow(px0 - px1, 2) + Math.pow(py0 - py1, 2)));
+					// for (let i = 1; i <= Math.ceil(Math.sqrt(Math.pow(px0 - px1, 2) + Math.pow(py0 - py1, 2))); i++) {
+					// 	ctx.beginPath();
+					// 	ctx.arc(px0 + (px1 - px0) / j * i, py0 + (py1 - py0) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
+					// 	ctx.fill();
+					// 	ctx.stroke();
+					// }
+					ctx.beginPath();
+					ctx.arc(px0 + (px1 - px0) / j * i, py0 + (py1 - py0) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
+					ctx.fill();
+					ctx.stroke();
+					// ctx.beginPath();
+					// //ctx.arc(px0, py0, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
+					// ctx.moveTo(px0, py0);
+					// ctx.lineTo(px1, py1);
+					// ctx.lineCap = "round";
+					// ctx.stroke();
+				}
+			}
+			last++;
+			_last++;
+
+		}
 
 		canvas.addEventListener("pointerdown", function (e) {
 			if (!draw_f) {
 				draw_f = true;
+				esc = 0;
 				var rect = e.target.getBoundingClientRect();
 				mouseX = e.clientX - rect.left;
 				mouseY = e.clientY - rect.top;
 				buffx.push(mouseX);
 				buffy.push(mouseY);
 				last++;
+				_last = 1;
+				bef_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				if (last_undo + 1 == undoImage.length) {
 					undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
 				} else {
@@ -277,8 +400,49 @@
 		canvas.addEventListener("pointerup", function (e) {
 			if (draw_f) {
 				draw_f = false;
+				_last = 0;
 			}
 		});
+
+		let myWorker = new Worker("task.js");
+		function get_pix() {
+			// pixel_data = [];
+			// if (bef_pix != undefined) {
+			// 	af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			// 	for (let i = 0; i < canvas.width * canvas.height; i++) {
+			// 		if (af_pix.data[4 * i] != bef_pix.data[4 * i] || af_pix.data[4 * i + 1] != bef_pix.data[4 * i + 1] || af_pix.data[4 * i + 2] != bef_pix.data[4 * i + 2] || af_pix.data[4 * i + 3] != bef_pix.data[4 * i + 3]) {
+			// 			pixel_data.push(i % canvas.width);
+			// 			pixel_data.push(Math.floor(i / canvas.width));
+			// 			pixel_data.push(af_pix[4 * i]);
+			// 			pixel_data.push(af_pix[4 * i + 1]);
+			// 			pixel_data.push(af_pix[4 * i + 2]);
+			// 			pixel_data.push(af_pix[4 * i + 3]);
+			// 		}
+			// 	}
+			// 	bef_pix = af_pix;
+			// 	//console.log("a");
+			// }
+			//myWorker = new Worker("task.js");
+			if (bef_pix != undefined || (bef_pix == undefined && bef_pix != af_pix)) {
+				console.log("a");
+				af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				let wid = canvas.width;
+				let hei = canvas.height;
+				let pix = { bef_pix: bef_pix, af_pix: af_pix, wid: wid, hei: hei };
+				myWorker.postMessage(pix);
+			} else {
+				setTimeout("get_pix()", 1000);
+			}
+		}
+
+		setTimeout("get_pix()", 1000);
+
+		myWorker.onmessage = function (e) {
+			pixel_data = e.data.pixel_data;
+			bef_pix = e.data.bef_pix;
+			af_pix = e.data.af_pix;
+			setTimeout("get_pix()", 1000);
+		}
 
 		lineWidth.addEventListener("mousemove", function () {
 			var lineNum = document.getElementById("lineWidth").value;
