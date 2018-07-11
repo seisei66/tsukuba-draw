@@ -47,24 +47,32 @@ body  {display: grid;
          list-style: none;}
 
 .menu li:hover   {background-color: #662222;}
-
+#send {
+        height: 40px;
+        color: #fcffdb;
+        background-color: #aaaaff;
+        text-decoration-color: #903bd6;
+        border: 0;
+}
 #log ul {
-  margin: 0;
-  padding: 0;
+        margin: 0;
+        padding: 0;
 }
 #log li {
-  display: block;
-  text-decoration: none;
-  list-style: none;
-  padding: 5px 10px;
-  background-color: #ddddff;
+        display: block;
+        text-decoration: none;
+        list-style: none;
+        padding: 5px 10px;
+        background-color: #ddddff;
 }
+
 
 #canvas {
   grid-area: main;
 }
 #chat {
   display: grid;
+  grid-template-rows: 100px 40px 1fr;
 /*  background-color: #dbdf19;*/
   grid-area: side2;
 }

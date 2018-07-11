@@ -60,18 +60,27 @@
 				})
 			})
 
-			send.addEventListener("click",function(e) {
+			send.addEventListener("click", e => {
 				if(msg.value != ""){
 					socket.emit("chat message", msg.value);
 					console.log({text: msg.value});
 					console.log(msg.value);
 					msg.value = "";
 				}
-			})
+			});
+
+			msg.addEventListener("keypress", e => {
+				if(e.keyCode == "13"){
+					if(msg.value != ""){
+						socket.emit("chat message", msg.value);
+						console.log({text: msg.value});
+						console.log(msg.value);
+						msg.value = "";
+					}
+				}
+			});
 
 			socket.on("chat message", data => {
-				console.log(data);
-//			　var d = JSON.parse(data);
 				let li = document.createElement('li');// liタグ作成
 				li.innerText = data; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
