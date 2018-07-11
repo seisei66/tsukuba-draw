@@ -9,7 +9,7 @@ var usersRouter = require('./routes/users');
 //var io = require('./routes/io.js');
 
 var http = require('http');
-var debug = require('debug')('tk-draw:server');
+var debug = require('debug')('tkb-draw:server');
 var app = express();
 
 /**
@@ -124,17 +124,31 @@ app.use(function(err, req, res, next) {
 });
 
 var io = require('socket.io').listen(server);
+let people = [];
 
 //接続確立時の処理
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connect', socket => {
   // この中でデータのやり取りを行う
   // 「message」という名前で受信したデータはこの中を通る
-  socket.on('chat message', function(msgData){
-    // そのまま全接続先へ送信
-    io.emit('chat message', msgData);
+  socket.on('username', username => {
+    people[socket.id] = username;
+    let userlist = [];
+    for(key in people){
+      userlist.push(people[key]);
+      console.log(people);
+      console.log(userlist);
+    }
+    io.emit('username', username);
+    io.emit('userlist', userlist);//empty考える
   });
-  socket.on('draw', function(drawData){
-    io.emit('draw', drawData);
+  socket.on('chat message', message => {
+    // ユーザ名を追加し全接続先へ送信
+    console.log(people[socket.id] + ' : ' + message);
+    io.emit('chat message', people[socket.id] + ' : ' + message);
+  });
+  socket.on('disconnect', function(){
+    io.emit('exit user', people[socket.id]);
+    delete people[socket.id];
   });
 });
 /*

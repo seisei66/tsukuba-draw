@@ -47,6 +47,19 @@ body  {display: grid;
          list-style: none;}
 
 .menu li:hover   {background-color: #662222;}
+
+#log ul {
+  margin: 0;
+  padding: 0;
+}
+#log li {
+  display: block;
+  text-decoration: none;
+  list-style: none;
+  padding: 5px 10px;
+  background-color: #ddddff;
+}
+
 #canvas {
   grid-area: main;
 }

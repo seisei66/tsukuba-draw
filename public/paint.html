@@ -37,9 +37,12 @@
 		window.onload = function(){
 			//chat
 //			var form = document.getElementById("textarea");
-			var msg = document.getElementById("chatarea");
-			var msgList = document.getElementById("msgList");
-			var send = document.getElementById("send");
+			let msg = document.getElementById("chatarea");
+			let msgList = document.getElementById("msgList");
+			let send = document.getElementById("send");
+			let popupBtn = document.getElementById("popup_btn");
+			let popup = document.getElementById("popup");
+
 		/*
 			send.onclick = function() {
 		//		var msgjson = JSON.stringify(msg.value());
@@ -47,20 +50,44 @@
 				msg.value("");
 			};
 			*/
+			let user = window.prompt("ユーザー名を入力してください","");
+			//if(user == NULL) location.href="/public/inde.html";
+			socket.emit("username", user);//動作確認してない
+
+			socket.on("connect", function(){
+				socket.on("userlist", userlist => {
+					let peoplelist = userlist;
+				})
+			})
 
 			send.addEventListener("click",function(e) {
-				console.log(msg.value);
-				socket.emit("chat message", {text: msg.value});
-				msg.value = "";
+				if(msg.value != ""){
+					socket.emit("chat message", msg.value);
+					console.log({text: msg.value});
+					console.log(msg.value);
+					msg.value = "";
+				}
 			})
 
 			socket.on("chat message", data => {
 				console.log(data);
 //			　var d = JSON.parse(data);
-				var li = document.createElement('li');// liタグ作成
-				li.innerText = data.text; // liタグに値を入れる
+				let li = document.createElement('li');// liタグ作成
+				li.innerText = data; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
 			});
+
+			socket.on("username", name => {
+				let liname = document.createElement('li');// liタグ作成
+				liname.innerText = name + 'さんが入室しました'; // liタグに値を入れる
+				msgList.appendChild(liname); // ulタグの子ノードとして作成したliタグを追加
+			});
+
+			socket.on("exit user", name => {
+				let liexit = document.createElement('li');// liタグ作成
+				liexit.innerText = name + 'さんが退室しました'; // liタグに値を入れる
+				msgList.appendChild(liexit); // ulタグの子ノードとして作成したliタグを追加
+			})
 
 			//chatここまで
 		};
@@ -78,6 +105,7 @@
 		<div class="circle"></div>
 		<div class="circle"></div>
 		<div class="circle"></div>
+<!--		<button type="button" name="popup_btn">Input your name</button>-->
 	</div>
 	<canvas id="canvas" width="600" height="600"></canvas>
 	<div class="colors">
@@ -97,6 +125,10 @@
 		<button id="send" type="button">SEND</button>
 		<div id="log"><ul id="msgList"></ul></div>
 	</div>
+
+
+
+
 	<script>
 
 
