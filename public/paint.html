@@ -12,18 +12,60 @@
 	<style>
 		canvas {
 			border: solid 1px black;
-			/* display: none;
+			display: none;
 			position: absolute;
-			z-index: 0; */
+			top: 50px;
 		}
 
-		/* #marge {
+		#area {
 			display: block;
 			width: 600px;
 			height: 600px;
-			visibility: hidden;
+		}
+
+		layer {
 			position: relative;
-		} */
+		}
+
+		#canvas1 {
+			z-index: 0;
+		}
+
+		#canvas2 {
+			z-index: 1;
+		}
+
+		#canvas3 {
+			z-index: 2;
+		}
+
+		#canvas4 {
+			z-index: 3;
+		}
+
+		#canvas5 {
+			z-index: 4;
+		}
+
+		#canvas6 {
+			z-index: 5;
+		}
+
+		#canvas7 {
+			z-index: 6;
+		}
+
+		#canvas8 {
+			z-index: 7;
+		}
+
+		#canvas9 {
+			z-index: 8;
+		}
+
+		#canvas10 {
+			z-index: 9;
+		}
 	</style>
 	<!--
 		<script id=io type="text/javascript" src="">
@@ -112,6 +154,7 @@
 		<div class="circle"></div>
 	</div>
 	<!--		<button type="button" name="popup_btn">Input your name</button>-->
+	<div id="area"></div>
 	<div id=layer>
 		<canvas id="canvas1" width="600" height="600"></canvas>
 		<canvas id="canvas2" width="600" height="600"></canvas>
@@ -124,7 +167,6 @@
 		<canvas id="canvas9" width="600" height="600"></canvas>
 		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
-	<div id="marge"> </div>>
 	<div class="colors">
 		<input id="R" type="number" min="0" max="255" value="0"></input>
 		<input id="G" type="number" min="0" max="255" value="0"></input>
@@ -146,11 +188,12 @@
 	</div>
 
 	<script>
-		let layer = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
-		let canvas = layer[0];
-		let ctx = layer[0].getContext("2d");
-		// canvas.style.display = "inline";
-		// canvas.style.zIndex = "10";
+		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
+		let canvas = layers[0];
+		let ctx = layers[0].getContext("2d");
+		canvas.style.display = "inline";
+		canvas.style.zIndex = "10";
+		let layer = document.getElementById("layer");
 		let reset = document.getElementById("reset");
 		let rgbr = document.getElementById("R");
 		let rgbg = document.getElementById("G");
@@ -209,17 +252,17 @@
 		});
 
 		n_layer.addEventListener("change", function (e) {
-			// canvas.style.display = "none";
-			// canvas.style.zIndex = "0";
-			canvas = layer[Number(e.target.value) - 1];
+			canvas.style.display = "none";
+			canvas.style.zIndex = "0";
+			canvas = layers[Number(e.target.value) - 1];
 			ctx = canvas.getContext("2d");
-			// canvas.style.display = "inline";
-			// canvas.style.zIndex = "10";
+			canvas.style.display = "inline";
+			canvas.style.zIndex = "10";
 			console.log(canvas.style);
 		});
 
 
-		canvas.addEventListener("pointermove", function (e) {
+		layer.addEventListener("pointermove", function (e) {
 			var rect = e.target.getBoundingClientRect();
 			ctx.lineWidth = document.getElementById("lineWidth").value;
 			mouseX = e.clientX - rect.left;
@@ -327,7 +370,7 @@
 
 		}
 
-		canvas.addEventListener("pointerdown", function (e) {
+		layer.addEventListener("pointerdown", function (e) {
 			if (!draw_f) {
 				draw_f = true;
 				esc = 0;
@@ -348,7 +391,7 @@
 			}
 		});
 
-		canvas.addEventListener("pointerup", function (e) {
+		layer.addEventListener("pointerup", function (e) {
 			if (draw_f) {
 				draw_f = false;
 				_last = 0;
