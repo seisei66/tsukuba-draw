@@ -27,43 +27,63 @@
 			position: relative;
 		}
 
-		#canvas1 {
+		#sum canvas {
+			border: solid 1px black;
+			display: inline;
+			position: absolute;
+		}
+
+		#sum {
+			position: relative;
+		}
+
+		#canvas1,
+		#s_canvas1 {
 			z-index: 0;
 		}
 
-		#canvas2 {
+		#canvas2,
+		#s_canvas2 {
 			z-index: 1;
 		}
 
-		#canvas3 {
+		#canvas3,
+		#s_canvas3 {
 			z-index: 2;
 		}
 
-		#canvas4 {
+		#canvas4,
+		#s_canvas4 {
 			z-index: 3;
 		}
 
-		#canvas5 {
+		#canvas5,
+		#s_canvas5 {
 			z-index: 4;
 		}
 
-		#canvas6 {
+		#canvas6,
+		#s_canvas6 {
 			z-index: 5;
 		}
 
-		#canvas7 {
+		#canvas7,
+		#s_canvas7 {
 			z-index: 6;
 		}
 
-		#canvas8 {
+		#canvas8,
+		#s_canvas8 {
 			z-index: 7;
 		}
 
-		#canvas9 {
+		#canvas9,
+		#s_canvas9 {
 			z-index: 8;
 		}
 
-		#canvas10 {
+		#canvas10,
+		#s_canvas10 {
 			z-index: 9;
 		}
 	</style>
@@ -186,7 +206,18 @@
 			<ul id="msgList"></ul>
 		</div>
 	</div>
-
+	<div id="sum">
+		<canvas id="s_canvas1" width="600" height="600"></canvas>
+		<canvas id="s_canvas2" width="600" height="600"></canvas>
+		<canvas id="s_canvas3" width="600" height="600"></canvas>
+		<canvas id="s_canvas4" width="600" height="600"></canvas>
+		<canvas id="s_canvas5" width="600" height="600"></canvas>
+		<canvas id="s_canvas6" width="600" height="600"></canvas>
+		<canvas id="s_canvas7" width="600" height="600"></canvas>
+		<canvas id="s_canvas8" width="600" height="600"></canvas>
+		<canvas id="s_canvas9" width="600" height="600"></canvas>
+		<canvas id="s_canvas10" width="600" height="600"></canvas>
+	</div>
 	<script>
 		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
 		let canvas = layers[0];
@@ -252,13 +283,15 @@
 		});
 
 		n_layer.addEventListener("change", function (e) {
-			canvas.style.display = "none";
-			canvas.style.zIndex = "0";
-			canvas = layers[Number(e.target.value) - 1];
-			ctx = canvas.getContext("2d");
-			canvas.style.display = "inline";
-			canvas.style.zIndex = "10";
-			console.log(canvas.style);
+			if (Number(e.target.value) >= 1 && Number(e.target.value) <= 10) {
+				canvas.style.display = "none";
+				canvas.style.zIndex = "0";
+				canvas = layers[Number(e.target.value) - 1];
+				ctx = canvas.getContext("2d");
+				canvas.style.display = "inline";
+				canvas.style.zIndex = "10";
+				console.log(canvas.style);
+			}
 		});
 
 
@@ -417,6 +450,7 @@
 			// 	//console.log("a");
 			// }
 			//myWorker = new Worker("task.js");
+
 			if (bef_pix != undefined || (bef_pix == undefined && bef_pix != af_pix)) {
 				af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				let wid = canvas.width;
@@ -426,6 +460,7 @@
 			} else {
 				setTimeout("get_pix()", 1000);
 			}
+
 		}
 
 		setTimeout("get_pix()", 1000);
