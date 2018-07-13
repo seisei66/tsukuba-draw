@@ -232,7 +232,6 @@
 		let ctx = layers[0].getContext("2d");
 		canvas.style.display = "inline";
 		canvas.style.zIndex = "10";
-		let s_ctx = [s_layers[0].getContext("2d"), s_layers[1].getContext("2d"), s_layers[2].getContext("2d"), s_layers[3].getContext("2d"), s_layers[4].getContext("2d"), s_layers[5].getContext("2d"), s_layers[6].getContext("2d"), s_layers[7].getContext("2d"), s_layers[8].getContext("2d"), s_layers[9].getContext("2d")];
 		let layer = document.getElementById("layer");
 		let reset = document.getElementById("reset");
 		let eraser = document.getElementById("eraser");
@@ -244,6 +243,8 @@
 
 		let mouseX, mouseY;
 		let draw_f = false;
+		let multi = false;
+		let reset_f = false;
 		let buffx = [];
 		let buffy = [];
 		let last = 0;
@@ -263,13 +264,9 @@
 			b = Math.round(picker.rgb[2]);
 		}
 		reset.addEventListener("pointerdown", function (e) {
-			if (last_undo + 1 == undoImage.length) {
-				undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-			} else {
-				undoImage[last_undo + 1] = ctx.getImageData(0, 0, canvas.width, canvas.height);
-			}
-			last_undo++;
+			f_reset = true;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			setTimeout("get_pix()", 200);
 		});
 
 		eraser.addEventListener("pointerdown", function (e) {
@@ -289,7 +286,6 @@
 				ctx = canvas.getContext("2d");
 				canvas.style.display = "inline";
 				canvas.style.zIndex = "10";
-				console.log(canvas.style);
 			}
 		});
 
@@ -300,10 +296,10 @@
 			mouseX = e.clientX - rect.left;
 			mouseY = e.clientY - rect.top;
 			if (e.pointerType === "pen") {
-				alpha = e.pressure / 2;
+				alpha = e.pressure;
 				ctx.lineWidth = document.getElementById("lineWidth").value * e.pressure;
 			} else {
-				alpha = 0.05;
+				alpha = 0.5;
 			}
 			if (draw_f === true) {
 				draw(e);
@@ -404,6 +400,9 @@
 					undoImage[last_undo + 1] = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				}
 				last_undo++;
+				if (!multi) {
+					setTimeout("get_pix()", 200);
+				}
 			}
 		});
 
@@ -416,25 +415,28 @@
 
 		let myWorker = new Worker("task.js");
 		function get_pix() {
-			if (bef_pix != undefined || (bef_pix == undefined && bef_pix != af_pix)) {
+			multi = true;
+			if (draw_f || f_reset) {
+				f_reset = false;
 				af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				let wid = canvas.width;
 				let hei = canvas.height;
 				let pix = { bef_pix: bef_pix, af_pix: af_pix, wid: wid, hei: hei };
 				myWorker.postMessage(pix);
 			} else {
-				setTimeout("get_pix()", 1000);
+				multi = false;
 			}
 			sum(Number(n_layer.value));
 		}
 
-		setTimeout("get_pix()", 1000);
 
 		myWorker.onmessage = function (e) {
-			pixel_data = e.data.pixel_data;
+			console.log("a");
+			if (e.data)
+				pixel_data = e.data.pixel_data;
 			bef_pix = e.data.bef_pix;
 			af_pix = e.data.af_pix;
-			setTimeout("get_pix()", 1000);
+			setTimeout("get_pix()", 200);
 		}
 
 		lineWidth.addEventListener("mousemove", function () {
