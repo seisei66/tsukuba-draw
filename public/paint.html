@@ -110,13 +110,8 @@
 				})
 			})
 
-<<<<<<< HEAD
 			send.addEventListener("click", e => {
 				if(msg.value != ""){
-=======
-			send.addEventListener("click", function (e) {
-				if (msg.value != "") {
->>>>>>> 03a655327a467becf2210ca43d109660629dbf6c
 					socket.emit("chat message", msg.value);
 					console.log({ text: msg.value });
 					console.log(msg.value);
@@ -136,11 +131,6 @@
 			});
 
 			socket.on("chat message", data => {
-<<<<<<< HEAD
-=======
-				console.log(data);
-				//			　var d = JSON.parse(data);
->>>>>>> 03a655327a467becf2210ca43d109660629dbf6c
 				let li = document.createElement('li');// liタグ作成
 				li.innerText = data; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
