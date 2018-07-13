@@ -190,16 +190,17 @@
 	<div class="colors">
 		<script src="jscolor.js"></script>
 		<button onclick="document.getElementById('foo').jscolor.show()">
-		    Show Picker</button>
+			Show Picker</button>
 
 		<button onclick="document.getElementById('foo').jscolor.hide()">
-		    Hide Picker</button>
+			Hide Picker</button>
 
-		<p><input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
-		</input>
-		<input id="n_layer" type="number" max=10 min=1 value=1></input>
-		<button id="reset" type="button">リセット</button>
-		<button id="eraser" type="button">消しゴム</button>
+		<p>
+			<input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
+			</input>
+			<input id="n_layer" type="number" max=10 min=1 value=1></input>
+			<button id="reset" type="button">リセット</button>
+			<button id="eraser" type="button">消しゴム</button>
 	</div>
 	<p>線の太さ
 		<input type="range" min="1" max="50" value="10" id="lineWidth">
@@ -226,10 +227,12 @@
 	</div>
 	<script>
 		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
+		let s_layers = [document.getElementById("s_canvas1"), document.getElementById("s_canvas2"), document.getElementById("s_canvas3"), document.getElementById("s_canvas4"), document.getElementById("s_canvas5"), document.getElementById("s_canvas6"), document.getElementById("s_canvas7"), document.getElementById("s_canvas8"), document.getElementById("s_canvas9"), document.getElementById("s_canvas10")];
 		let canvas = layers[0];
 		let ctx = layers[0].getContext("2d");
 		canvas.style.display = "inline";
 		canvas.style.zIndex = "10";
+		let s_ctx = [s_layers[0].getContext("2d"), s_layers[1].getContext("2d"), s_layers[2].getContext("2d"), s_layers[3].getContext("2d"), s_layers[4].getContext("2d"), s_layers[5].getContext("2d"), s_layers[6].getContext("2d"), s_layers[7].getContext("2d"), s_layers[8].getContext("2d"), s_layers[9].getContext("2d")];
 		let layer = document.getElementById("layer");
 		let reset = document.getElementById("reset");
 		let eraser = document.getElementById("eraser");
@@ -254,11 +257,11 @@
 		let pen = true;
 		let esc = 0;
 
-   	        function update(picker) {
-		        r = Math.round(picker.rgb[0]);
+		function update(picker) {
+			r = Math.round(picker.rgb[0]);
 			g = Math.round(picker.rgb[1]);
 			b = Math.round(picker.rgb[2]);
-                }
+		}
 		reset.addEventListener("pointerdown", function (e) {
 			if (last_undo + 1 == undoImage.length) {
 				undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
@@ -350,7 +353,6 @@
 			buffy.push(mouseY);
 
 			if (pen) {
-				//ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
 				ctx.strokeStyle = "rgba(0,0,0,0)";
 				ctx.fillStyle = "rgba(" + [r, g, b, alpha] + ")";
 				ctx.globalCompositeOperation = 'source-over';
@@ -359,8 +361,6 @@
 				ctx.globalCompositeOperation = 'destination-out';
 			}
 			if (_last % 3 == 0) {
-				// let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 1], 2) + Math.pow(buffy[last] - buffy[last - 1], 2)) + Math.sqrt(Math.pow(buffx[last - 2] - buffx[last - 1], 2) + Math.pow(buffy[last - 2] - buffy[last - 1], 2));
-				// j = Math.ceil(j);
 				let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 3], 2) + Math.pow(buffy[last] - buffy[last - 3], 2));
 				j = Math.ceil(j);
 				let div = j;
@@ -374,24 +374,11 @@
 
 					let px1 = calc(buffx[last - 3], buffx[last - 2], buffx[last - 1], buffx[last], t1);
 					let py1 = calc(buffy[last - 3], buffy[last - 2], buffy[last - 1], buffy[last], t1);
-					//console.log(px0);
-					// let j = Math.ceil(Math.sqrt(Math.pow(px0 - px1, 2) + Math.pow(py0 - py1, 2)));
-					// for (let i = 1; i <= Math.ceil(Math.sqrt(Math.pow(px0 - px1, 2) + Math.pow(py0 - py1, 2))); i++) {
-					// 	ctx.beginPath();
-					// 	ctx.arc(px0 + (px1 - px0) / j * i, py0 + (py1 - py0) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
-					// 	ctx.fill();
-					// 	ctx.stroke();
-					// }
+
 					ctx.beginPath();
 					ctx.arc(px0 + (px1 - px0) / j * i, py0 + (py1 - py0) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
 					ctx.fill();
 					ctx.stroke();
-					// ctx.beginPath();
-					// //ctx.arc(px0, py0, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
-					// ctx.moveTo(px0, py0);
-					// ctx.lineTo(px1, py1);
-					// ctx.lineCap = "round";
-					// ctx.stroke();
 				}
 			}
 			last++;
@@ -429,24 +416,6 @@
 
 		let myWorker = new Worker("task.js");
 		function get_pix() {
-			// pixel_data = [];
-			// if (bef_pix != undefined) {
-			// 	af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
-			// 	for (let i = 0; i < canvas.width * canvas.height; i++) {
-			// 		if (af_pix.data[4 * i] != bef_pix.data[4 * i] || af_pix.data[4 * i + 1] != bef_pix.data[4 * i + 1] || af_pix.data[4 * i + 2] != bef_pix.data[4 * i + 2] || af_pix.data[4 * i + 3] != bef_pix.data[4 * i + 3]) {
-			// 			pixel_data.push(i % canvas.width);
-			// 			pixel_data.push(Math.floor(i / canvas.width));
-			// 			pixel_data.push(af_pix[4 * i]);
-			// 			pixel_data.push(af_pix[4 * i + 1]);
-			// 			pixel_data.push(af_pix[4 * i + 2]);
-			// 			pixel_data.push(af_pix[4 * i + 3]);
-			// 		}
-			// 	}
-			// 	bef_pix = af_pix;
-			// 	//console.log("a");
-			// }
-			//myWorker = new Worker("task.js");
-
 			if (bef_pix != undefined || (bef_pix == undefined && bef_pix != af_pix)) {
 				af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				let wid = canvas.width;
@@ -456,7 +425,7 @@
 			} else {
 				setTimeout("get_pix()", 1000);
 			}
-
+			sum(Number(n_layer.value));
 		}
 
 		setTimeout("get_pix()", 1000);
@@ -472,6 +441,10 @@
 			var lineNum = document.getElementById("lineWidth").value;
 			document.getElementById("lineNum").innerHTML = lineNum;
 		});
+
+		function sum(num) {
+			s_layers[num - 1].getContext('2d').putImageData(layers[num - 1].getContext('2d').getImageData(0, 0, canvas.width, canvas.height), 0, 0);
+		}
 	</script>
 
 </body>
