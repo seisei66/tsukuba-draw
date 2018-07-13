@@ -1,10 +1,35 @@
 @charset "UTF-8";
+body  {
+       display: -ms-grid;
+       margin: 0;
+	 -ms-grid-columns: 3fr 5fr 2fr;}
+.site {
+       -ms-grid-column:1;
+	     -ms-grid-column-span:3;
+	     -ms-grid-row: 1;
+       }
+.colors {
+      -ms-grid-column:1;
+      -ms-grid-row:2;
+      width: auto;
+    }
+
+.canvas{
+      -ms-grid-column:2;
+      -ms-grid-row:2;
+      margin:auto;
+}
+#chat{
+  -ms-grid-column:3;
+  -ms-grid-row:2;
+  background-color: #f0f0f0;
+}
 
 body  {display: grid;
       grid-template-areas:
                 "head head head"
                 "side1 main side2";
-      grid-template-columns: 1fr 5fr 3fr;
+      grid-template-columns: 3fr 5fr 3fr;
        margin: 0;
        font-family: 'Source Sans Pro', 'メイリオ',
        'Hiragino Kaku Gothic Pro', sans-serif
