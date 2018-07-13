@@ -394,6 +394,8 @@
 
 		myWorker.onmessage = function (e) {
 			pixel_data = e.data.pixel_data;
+			//ピクセルデータ送信
+			socket.emit("pixel data", pixel_data);
 			bef_pix = e.data.bef_pix;
 			af_pix = e.data.af_pix;
 			setTimeout("get_pix()", 1000);
