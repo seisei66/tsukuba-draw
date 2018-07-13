@@ -123,13 +123,12 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var io = require('socket.io').listen(server);
+let io = require('socket.io').listen(server);
 let people = [];
+let layerlst = new Array(10);
 
-//接続確立時の処理
+//ユーザー入室時
 io.sockets.on('connect', socket => {
-  // この中でデータのやり取りを行う
-  // 「message」という名前で受信したデータはこの中を通る
   socket.on('username', username => {
     people[socket.id] = username;
     let userlist = [];
@@ -138,17 +137,41 @@ io.sockets.on('connect', socket => {
       console.log(people);
       console.log(userlist);
     }
+    for(let i=0; i<10; i++){
+      if(!layerlst[i]) layerlst[i] = socket.id;
+      break;
+    }
+    io.emit('layer changed', layerlst);
+    io.emit('socketid notice', socket.id);
     io.emit('username', username);
     io.emit('userlist', userlist);//empty考える
   });
+
+  // チャット内容にユーザ名を追加し全接続先へ送信
   socket.on('chat message', message => {
-    // ユーザ名を追加し全接続先へ送信
     console.log(people[socket.id] + ' : ' + message);
     io.emit('chat message', people[socket.id] + ' : ' + message);
   });
+
+  //ユーザー退室時
   socket.on('disconnect', function(){
     io.emit('exit user', people[socket.id]);
     delete people[socket.id];
+    layerlst[socket.id] = 0;
+    io.emit('layer changed', layerlst);
+  });
+
+  //描画データ送信
+  socket.on('pixel data', pixel_data => {
+    io.emit('pixel data', JSON.stringify({layer:layerlst.indexOf(socket.id), data:pixel_data}));
+  });
+
+  //描画レイヤー変更時
+  socket.on('layer changed', layernum => {
+    layerlst[layerlst.indexOf(socket.id)] = 0;
+    layerlst[layernum] = socket.id;
+    io.emit('layer changed', layerlst);
+    console.log(layerlst);
   });
 });
 /*

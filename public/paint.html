@@ -58,13 +58,17 @@
 				};
 				*/
 			let user = window.prompt("ユーザー名を入力してください", "");
+			let mySocketId;
 			//if(user == NULL) location.href="/public/inde.html";
 			socket.emit("username", user);//動作確認してない
 
-			socket.on("connect", function () {
+			socket.on("connect", () => {
 				socket.on("userlist", userlist => {
 					let peoplelist = userlist;
-				})
+				});
+				socket.on("socketid notice", id => {
+					mySocketId = id;
+				});
 			})
 
 			send.addEventListener("click", e => {
@@ -94,15 +98,15 @@
 			});
 
 			socket.on("username", name => {
-				let liname = document.createElement('li');// liタグ作成
-				liname.innerText = name + 'さんが入室しました'; // liタグに値を入れる
-				msgList.appendChild(liname); // ulタグの子ノードとして作成したliタグを追加
+				let liname = document.createElement('li');
+				liname.innerText = name + 'さんが入室しました';
+				msgList.appendChild(liname);
 			});
 
 			socket.on("exit user", name => {
-				let liexit = document.createElement('li');// liタグ作成
-				liexit.innerText = name + 'さんが退室しました'; // liタグに値を入れる
-				msgList.appendChild(liexit); // ulタグの子ノードとして作成したliタグを追加
+				let liexit = document.createElement('li');
+				liexit.innerText = name + 'さんが退室しました';
+				msgList.appendChild(liexit);
 			})
 
 			//chatここまで
@@ -153,7 +157,7 @@
 		<span id="lineNum">10</span>
 	</p>
 	<div id="chat">
-		<textarea name="chatarea" id="chatarea" cols="15" rows="3" placeholder="CHAT AREA"></textarea>
+		<input type="text" id="chatarea" placeholder="CHAT AREA"></input>
 		<button id="send" type="button">SEND</button>
 		<div id="log">
 			<ul id="msgList"></ul>
@@ -178,6 +182,7 @@
 		let draw_f = false;
 		let buffx = [];
 		let buffy = [];
+		let layer_used = [];
 		let last = 0;
 		let _last = 0;
 		let last_undo = -1;
@@ -216,11 +221,22 @@
 		n_layer.addEventListener("change", function (e) {
 			// canvas.style.display = "none";
 			// canvas.style.zIndex = "0";
-			canvas = layer[Number(e.target.value) - 1];
-			ctx = canvas.getContext("2d");
-			// canvas.style.display = "inline";
-			// canvas.style.zIndex = "10";
+			//layer番号送信
+			let layernum = Number(e.target.value) - 1;
+				if (!layer_used[layernum]) {
+					socket.emit("layer changed", layernum);
+					canvas = layer[layernum];
+					ctx = canvas.getContext("2d");
+					// canvas.style.display = "inline";
+					// canvas.style.zIndex = "10";
+				} else {
+					e.target.value = layer_used.indexOf(mySocketId);
+				}
 			console.log(canvas.style);
+		});
+
+		socket.on("layer changed", layerlst => {
+			layer_used = layerlst;
 		});
 
 
