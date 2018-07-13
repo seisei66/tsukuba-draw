@@ -188,9 +188,15 @@
 		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
 	<div class="colors">
-		<input id="R" type="number" min="0" max="255" value="0"></input>
-		<input id="G" type="number" min="0" max="255" value="0"></input>
-		<input id="B" type="number" min="0" max="255" value="0"></input>
+		<script src="jscolor.js"></script>
+		<button onclick="document.getElementById('foo').jscolor.show()">
+		    Show Picker</button>
+
+		<button onclick="document.getElementById('foo').jscolor.hide()">
+		    Hide Picker</button>
+
+		<p><input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
+		</input>
 		<input id="n_layer" type="number" max=10 min=1 value=1></input>
 		<button id="reset" type="button">リセット</button>
 		<button id="eraser" type="button">消しゴム</button>
@@ -226,9 +232,6 @@
 		canvas.style.zIndex = "10";
 		let layer = document.getElementById("layer");
 		let reset = document.getElementById("reset");
-		let rgbr = document.getElementById("R");
-		let rgbg = document.getElementById("G");
-		let rgbb = document.getElementById("B");
 		let eraser = document.getElementById("eraser");
 		let n_layer = document.getElementById("n_layer");
 
@@ -251,18 +254,11 @@
 		let pen = true;
 		let esc = 0;
 
-		rgbr.addEventListener("input", function (e) {
-			r = Number(e.target.value);
-		});
-
-		rgbg.addEventListener("input", function (e) {
-			g = Number(e.target.value);
-		});
-
-		rgbb.addEventListener("input", function (e) {
-			b = Number(e.target.value);
-		});
-
+   	        function update(picker) {
+		        r = Math.round(picker.rgb[0]);
+			g = Math.round(picker.rgb[1]);
+			b = Math.round(picker.rgb[2]);
+                }
 		reset.addEventListener("pointerdown", function (e) {
 			if (last_undo + 1 == undoImage.length) {
 				undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
