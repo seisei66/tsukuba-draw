@@ -12,60 +12,17 @@
 	<style>
 		canvas {
 			border: solid 1px black;
+			/* display: none;
+			position: absolute;
+			z-index: 0; */
 		}
 
-		/* #layer {
+		/* #marge {
+			display: block;
+			width: 600px;
+			height: 600px;
+			visibility: hidden;
 			position: relative;
-		}
-
-		#canvas1 {
-			position: absolute;
-			z-index: 0;
-		}
-
-		#canvas2 {
-			position: absolute;
-			z-index: 1;
-		}
-
-		#canvas3 {
-			position: absolute;
-			z-index: 2;
-		}
-
-		#canvas4 {
-			position: absolute;
-			z-index: 3;
-		}
-
-		#canvas5 {
-			position: absolute;
-			z-index: 4;
-		}
-
-		#canvas6 {
-			position: absolute;
-			z-index: 5;
-		}
-
-		#canvas7 {
-			position: absolute;
-			z-index: 6;
-		}
-
-		#canvas8 {
-			position: absolute;
-			z-index: 7;
-		}
-
-		#canvas9 {
-			position: absolute;
-			z-index: 8;
-		}
-
-		#canvas10 {
-			position: absolute;
-			z-index: 9;
 		} */
 	</style>
 	<!--
@@ -176,10 +133,18 @@
 		<canvas id="canvas9" width="600" height="600"></canvas>
 		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
+	<div id="marge"> </div>>
 	<div class="colors">
-		<input id="R" type="number" min="0" max="255" value="0"></input>
-		<input id="G" type="number" min="0" max="255" value="0"></input>
-		<input id="B" type="number" min="0" max="255" value="0"></input>
+		<script src="jscolor.js"></script>
+		<button onclick="document.getElementById('foo').jscolor.show()">
+		    Show Picker</button>
+
+		<button onclick="document.getElementById('foo').jscolor.hide()">
+		    Hide Picker</button>
+
+		<p><input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
+		</input>
+		<input id="n_layer" type="number" max=10 min=1 value=1></input>
 		<button id="reset" type="button">リセット</button>
 		<button id="eraser" type="button">消しゴム</button>
 	</div>
@@ -198,12 +163,12 @@
 	<script>
 		let layer = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
 		let canvas = layer[0];
-		let ctx = canvas.getContext("2d");
+		let ctx = layer[0].getContext("2d");
+		// canvas.style.display = "inline";
+		// canvas.style.zIndex = "10";
 		let reset = document.getElementById("reset");
-		let rgbr = document.getElementById("R");
-		let rgbg = document.getElementById("G");
-		let rgbb = document.getElementById("B");
 		let eraser = document.getElementById("eraser");
+		let n_layer = document.getElementById("n_layer");
 
 		let pixel_data = [];
 		let bef_pix;
@@ -224,18 +189,11 @@
 		let pen = true;
 		let esc = 0;
 
-		rgbr.addEventListener("input", function (e) {
-			r = Number(e.target.value);
-		});
-
-		rgbg.addEventListener("input", function (e) {
-			g = Number(e.target.value);
-		});
-
-		rgbb.addEventListener("input", function (e) {
-			b = Number(e.target.value);
-		});
-
+   	        function update(picker) {
+		        r = Math.round(picker.rgb[0]);
+			g = Math.round(picker.rgb[1]);
+			b = Math.round(picker.rgb[2]);
+                }
 		reset.addEventListener("pointerdown", function (e) {
 			if (last_undo + 1 == undoImage.length) {
 				undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
@@ -247,13 +205,22 @@
 		});
 
 		eraser.addEventListener("pointerdown", function (e) {
-			console.log(e);
 			if (pen) {
 				e.target.innerHTML = "ペン";
 			} else {
 				e.target.innerHTML = "消しゴム";
 			}
 			pen = !pen;
+		});
+
+		n_layer.addEventListener("change", function (e) {
+			// canvas.style.display = "none";
+			// canvas.style.zIndex = "0";
+			canvas = layer[Number(e.target.value) - 1];
+			ctx = canvas.getContext("2d");
+			// canvas.style.display = "inline";
+			// canvas.style.zIndex = "10";
+			console.log(canvas.style);
 		});
 
 
@@ -271,7 +238,6 @@
 			if (draw_f === true) {
 				draw(e);
 			}
-			layer[1] = layer[0];
 		});
 
 		function draw(e) {
@@ -414,7 +380,6 @@
 			// }
 			//myWorker = new Worker("task.js");
 			if (bef_pix != undefined || (bef_pix == undefined && bef_pix != af_pix)) {
-				console.log("a");
 				af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				let wid = canvas.width;
 				let hei = canvas.height;
