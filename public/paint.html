@@ -12,18 +12,80 @@
 	<style>
 		canvas {
 			border: solid 1px black;
-			/* display: none;
+			display: none;
 			position: absolute;
-			z-index: 0; */
+			top: 50px;
 		}
 
-		/* #marge {
+		#area {
 			display: block;
 			width: 600px;
 			height: 600px;
-			visibility: hidden;
+		}
+
+		layer {
 			position: relative;
-		} */
+		}
+
+		#sum canvas {
+			border: solid 1px black;
+			display: inline;
+			position: absolute;
+		}
+
+		#sum {
+			position: relative;
+		}
+
+		#canvas1,
+		#s_canvas1 {
+			z-index: 0;
+		}
+
+		#canvas2,
+		#s_canvas2 {
+			z-index: 1;
+		}
+
+		#canvas3,
+		#s_canvas3 {
+			z-index: 2;
+		}
+
+		#canvas4,
+		#s_canvas4 {
+			z-index: 3;
+		}
+
+		#canvas5,
+		#s_canvas5 {
+			z-index: 4;
+		}
+
+		#canvas6,
+		#s_canvas6 {
+			z-index: 5;
+		}
+
+		#canvas7,
+		#s_canvas7 {
+			z-index: 6;
+		}
+
+		#canvas8,
+		#s_canvas8 {
+			z-index: 7;
+		}
+
+		#canvas9,
+		#s_canvas9 {
+			z-index: 8;
+		}
+
+		#canvas10,
+		#s_canvas10 {
+			z-index: 9;
+		}
 	</style>
 	<!--
 		<script id=io type="text/javascript" src="">
@@ -125,6 +187,7 @@
 		<div class="circle"></div>
 	</div>
 	<!--		<button type="button" name="popup_btn">Input your name</button>-->
+	<div id="area"></div>
 	<div id=layer>
 		<canvas id="canvas1" width="600" height="600"></canvas>
 		<canvas id="canvas2" width="600" height="600"></canvas>
@@ -137,20 +200,20 @@
 		<canvas id="canvas9" width="600" height="600"></canvas>
 		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
-	<div id="marge"> </div>>
 	<div class="colors">
 		<script src="jscolor.js"></script>
 		<button onclick="document.getElementById('foo').jscolor.show()">
-		    Show Picker</button>
+			Show Picker</button>
 
 		<button onclick="document.getElementById('foo').jscolor.hide()">
-		    Hide Picker</button>
+			Hide Picker</button>
 
-		<p><input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
-		</input>
-		<input id="n_layer" type="number" max=10 min=1 value=1></input>
-		<button id="reset" type="button">リセット</button>
-		<button id="eraser" type="button">消しゴム</button>
+		<p>
+			<input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
+			</input>
+			<input id="n_layer" type="number" max=10 min=1 value=1></input>
+			<button id="reset" type="button">リセット</button>
+			<button id="eraser" type="button">消しゴム</button>
 	</div>
 	<p>線の太さ
 		<input type="range" min="1" max="50" value="10" id="lineWidth">
@@ -163,13 +226,26 @@
 			<ul id="msgList"></ul>
 		</div>
 	</div>
-
+	<div id="sum">
+		<canvas id="s_canvas1" width="600" height="600"></canvas>
+		<canvas id="s_canvas2" width="600" height="600"></canvas>
+		<canvas id="s_canvas3" width="600" height="600"></canvas>
+		<canvas id="s_canvas4" width="600" height="600"></canvas>
+		<canvas id="s_canvas5" width="600" height="600"></canvas>
+		<canvas id="s_canvas6" width="600" height="600"></canvas>
+		<canvas id="s_canvas7" width="600" height="600"></canvas>
+		<canvas id="s_canvas8" width="600" height="600"></canvas>
+		<canvas id="s_canvas9" width="600" height="600"></canvas>
+		<canvas id="s_canvas10" width="600" height="600"></canvas>
+	</div>
 	<script>
-		let layer = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
-		let canvas = layer[0];
-		let ctx = layer[0].getContext("2d");
-		// canvas.style.display = "inline";
-		// canvas.style.zIndex = "10";
+		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
+		let s_layers = [document.getElementById("s_canvas1"), document.getElementById("s_canvas2"), document.getElementById("s_canvas3"), document.getElementById("s_canvas4"), document.getElementById("s_canvas5"), document.getElementById("s_canvas6"), document.getElementById("s_canvas7"), document.getElementById("s_canvas8"), document.getElementById("s_canvas9"), document.getElementById("s_canvas10")];
+		let canvas = layers[0];
+		let ctx = layers[0].getContext("2d");
+		canvas.style.display = "inline";
+		canvas.style.zIndex = "10";
+		let layer = document.getElementById("layer");
 		let reset = document.getElementById("reset");
 		let eraser = document.getElementById("eraser");
 		let n_layer = document.getElementById("n_layer");
@@ -180,6 +256,8 @@
 
 		let mouseX, mouseY;
 		let draw_f = false;
+		let multi = false;
+		let reset_f = false;
 		let buffx = [];
 		let buffy = [];
 		let layer_used = [];
@@ -194,19 +272,15 @@
 		let pen = true;
 		let esc = 0;
 
-   	        function update(picker) {
-		        r = Math.round(picker.rgb[0]);
+		function update(picker) {
+			r = Math.round(picker.rgb[0]);
 			g = Math.round(picker.rgb[1]);
 			b = Math.round(picker.rgb[2]);
-                }
+		}
 		reset.addEventListener("pointerdown", function (e) {
-			if (last_undo + 1 == undoImage.length) {
-				undoImage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-			} else {
-				undoImage[last_undo + 1] = ctx.getImageData(0, 0, canvas.width, canvas.height);
-			}
-			last_undo++;
+			f_reset = true;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			setTimeout("get_pix()", 200);
 		});
 
 		eraser.addEventListener("pointerdown", function (e) {
@@ -222,7 +296,14 @@
 			// canvas.style.display = "none";
 			// canvas.style.zIndex = "0";
 			//layer番号送信
-			let layernum = Number(e.target.value) - 1;
+			if (Number(e.target.value) >= 1 && Number(e.target.value) <= 10) {
+				canvas.style.display = "none";
+				canvas.style.zIndex = "0";
+				let layernum = Number(e.target.value) - 1;
+				canvas = layers[layernum];
+				ctx = canvas.getContext("2d");
+				canvas.style.display = "inline";
+				canvas.style.zIndex = "10";
 				if (!layer_used[layernum]) {
 					socket.emit("layer changed", layernum);
 					canvas = layer[layernum];
@@ -232,7 +313,8 @@
 				} else {
 					e.target.value = layer_used.indexOf(mySocketId);
 				}
-			console.log(canvas.style);
+				console.log(canvas.style);
+			}
 		});
 
 		socket.on("layer changed", layerlst => {
@@ -240,16 +322,16 @@
 		});
 
 
-		canvas.addEventListener("pointermove", function (e) {
+		layer.addEventListener("pointermove", function (e) {
 			var rect = e.target.getBoundingClientRect();
 			ctx.lineWidth = document.getElementById("lineWidth").value;
 			mouseX = e.clientX - rect.left;
 			mouseY = e.clientY - rect.top;
 			if (e.pointerType === "pen") {
-				alpha = e.pressure / 2;
+				alpha = e.pressure;
 				ctx.lineWidth = document.getElementById("lineWidth").value * e.pressure;
 			} else {
-				alpha = 0.05;
+				alpha = 0.5;
 			}
 			if (draw_f === true) {
 				draw(e);
@@ -299,7 +381,6 @@
 			buffy.push(mouseY);
 
 			if (pen) {
-				//ctx.strokeStyle = "rgba(" + [r, g, b, alpha] + ")";
 				ctx.strokeStyle = "rgba(0,0,0,0)";
 				ctx.fillStyle = "rgba(" + [r, g, b, alpha] + ")";
 				ctx.globalCompositeOperation = 'source-over';
@@ -308,8 +389,6 @@
 				ctx.globalCompositeOperation = 'destination-out';
 			}
 			if (_last % 3 == 0) {
-				// let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 1], 2) + Math.pow(buffy[last] - buffy[last - 1], 2)) + Math.sqrt(Math.pow(buffx[last - 2] - buffx[last - 1], 2) + Math.pow(buffy[last - 2] - buffy[last - 1], 2));
-				// j = Math.ceil(j);
 				let j = Math.sqrt(Math.pow(buffx[last] - buffx[last - 3], 2) + Math.pow(buffy[last] - buffy[last - 3], 2));
 				j = Math.ceil(j);
 				let div = j;
@@ -323,24 +402,11 @@
 
 					let px1 = calc(buffx[last - 3], buffx[last - 2], buffx[last - 1], buffx[last], t1);
 					let py1 = calc(buffy[last - 3], buffy[last - 2], buffy[last - 1], buffy[last], t1);
-					//console.log(px0);
-					// let j = Math.ceil(Math.sqrt(Math.pow(px0 - px1, 2) + Math.pow(py0 - py1, 2)));
-					// for (let i = 1; i <= Math.ceil(Math.sqrt(Math.pow(px0 - px1, 2) + Math.pow(py0 - py1, 2))); i++) {
-					// 	ctx.beginPath();
-					// 	ctx.arc(px0 + (px1 - px0) / j * i, py0 + (py1 - py0) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
-					// 	ctx.fill();
-					// 	ctx.stroke();
-					// }
+
 					ctx.beginPath();
 					ctx.arc(px0 + (px1 - px0) / j * i, py0 + (py1 - py0) / j * i, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
 					ctx.fill();
 					ctx.stroke();
-					// ctx.beginPath();
-					// //ctx.arc(px0, py0, ctx.lineWidth / 2, 0, 2 * Math.PI, true);
-					// ctx.moveTo(px0, py0);
-					// ctx.lineTo(px1, py1);
-					// ctx.lineCap = "round";
-					// ctx.stroke();
 				}
 			}
 			last++;
@@ -348,7 +414,7 @@
 
 		}
 
-		canvas.addEventListener("pointerdown", function (e) {
+		layer.addEventListener("pointerdown", function (e) {
 			if (!draw_f) {
 				draw_f = true;
 				esc = 0;
@@ -366,10 +432,13 @@
 					undoImage[last_undo + 1] = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				}
 				last_undo++;
+				if (!multi) {
+					setTimeout("get_pix()", 200);
+				}
 			}
 		});
 
-		canvas.addEventListener("pointerup", function (e) {
+		layer.addEventListener("pointerup", function (e) {
 			if (draw_f) {
 				draw_f = false;
 				_last = 0;
@@ -378,49 +447,40 @@
 
 		let myWorker = new Worker("task.js");
 		function get_pix() {
-			// pixel_data = [];
-			// if (bef_pix != undefined) {
-			// 	af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
-			// 	for (let i = 0; i < canvas.width * canvas.height; i++) {
-			// 		if (af_pix.data[4 * i] != bef_pix.data[4 * i] || af_pix.data[4 * i + 1] != bef_pix.data[4 * i + 1] || af_pix.data[4 * i + 2] != bef_pix.data[4 * i + 2] || af_pix.data[4 * i + 3] != bef_pix.data[4 * i + 3]) {
-			// 			pixel_data.push(i % canvas.width);
-			// 			pixel_data.push(Math.floor(i / canvas.width));
-			// 			pixel_data.push(af_pix[4 * i]);
-			// 			pixel_data.push(af_pix[4 * i + 1]);
-			// 			pixel_data.push(af_pix[4 * i + 2]);
-			// 			pixel_data.push(af_pix[4 * i + 3]);
-			// 		}
-			// 	}
-			// 	bef_pix = af_pix;
-			// 	//console.log("a");
-			// }
-			//myWorker = new Worker("task.js");
-			if (bef_pix != undefined || (bef_pix == undefined && bef_pix != af_pix)) {
+			multi = true;
+			if (draw_f || f_reset) {
+				f_reset = false;
 				af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				let wid = canvas.width;
 				let hei = canvas.height;
 				let pix = { bef_pix: bef_pix, af_pix: af_pix, wid: wid, hei: hei };
 				myWorker.postMessage(pix);
 			} else {
-				setTimeout("get_pix()", 1000);
+				multi = false;
 			}
+			sum(Number(n_layer.value));
 		}
 
-		setTimeout("get_pix()", 1000);
 
 		myWorker.onmessage = function (e) {
-			pixel_data = e.data.pixel_data;
 			//ピクセルデータ送信
+			console.log("a");
+			if (e.data)
+				pixel_data = e.data.pixel_data;
 			socket.emit("pixel data", pixel_data);
 			bef_pix = e.data.bef_pix;
 			af_pix = e.data.af_pix;
-			setTimeout("get_pix()", 1000);
+			setTimeout("get_pix()", 200);
 		}
 
 		lineWidth.addEventListener("mousemove", function () {
 			var lineNum = document.getElementById("lineWidth").value;
 			document.getElementById("lineNum").innerHTML = lineNum;
 		});
+
+		function sum(num) {
+			s_layers[num - 1].getContext('2d').putImageData(layers[num - 1].getContext('2d').getImageData(0, 0, canvas.width, canvas.height), 0, 0);
+		}
 	</script>
 
 </body>
