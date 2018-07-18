@@ -1,8 +1,9 @@
 @charset "UTF-8";
 body  {
        display: -ms-grid;
-       margin: 0;
-	 -ms-grid-columns: 3fr 5fr 2fr;}
+       -ms-grid-columns: 3fr 600px 2fr;
+       -ms-grid-rows:1fr 600px 600px;
+}
 .site {
        -ms-grid-column:1;
 	     -ms-grid-column-span:3;
@@ -13,8 +14,12 @@ body  {
       -ms-grid-row:2;
       width: auto;
     }
-
-.canvas{
+.colors canvas{
+  margin-left: 10px;
+  width: 300px;
+  height: 300px;
+}
+#layer {
       -ms-grid-column:2;
       -ms-grid-row:2;
       margin:auto;
@@ -28,15 +33,16 @@ body  {
 body  {display: grid;
       grid-template-areas:
                 "head head head"
-                "side1 main side2";
-      grid-template-columns: 3fr 5fr 3fr;
+                "side1 main side2"
+                "foot foot foot";
+      grid-template-columns: 3fr 600px 2fr;
+      grid-template-rows: 1fr 600px 600px;
        margin: 0;
        font-family: 'Source Sans Pro', 'メイリオ',
        'Hiragino Kaku Gothic Pro', sans-serif
        }
 
 .site  {
-       display: flex;
        grid-area: head;
        background-color: #cf6766;
        padding: 10px;
@@ -54,24 +60,30 @@ body  {display: grid;
             border-radius: 50%;
             background: white;}
 
-.menu  {grid-area: side1;
+.colors  {
+        grid-area: side1;
         padding: 20px 0;
-        background-color: #f0f0e9;}
+        background-color: #ffffff;
+        width: auto;
+      }
 
-.menu ul{margin: 0;
-         padding: 0;
-         list-style: none;}
-
-.menu li{display: block;
+input   {
+         list-style: none;
          margin-bottom: 15px;
          padding: 5px;
-         background-color: #c60019;
-         color: #ffffff;
+         color: #000000;
          font-size: 14px;
          text-decoration: none;
          list-style: none;}
+.layer canvas{
+  grid-area: main;
+  margin: auto;
+}
+#chat{
+  grid-area: side2;
+  background-color: #f0f0f0;
+}
 
-.menu li:hover   {background-color: #662222;}
 #send {
         height: 40px;
         color: #fcffdb;
@@ -92,12 +104,4 @@ body  {display: grid;
 }
 
 
-#canvas {
-  grid-area: main;
-}
-#chat {
-  display: grid;
-  grid-template-rows: 100px 40px 1fr;
-/*  background-color: #dbdf19;*/
-  grid-area: side2;
-}
+
