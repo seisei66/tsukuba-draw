@@ -85,7 +85,7 @@
 	};
 
 	let mySocketId;
-	window.onload = function () {
+	window.onload = () => {
 		let msg = document.getElementById("chatarea");
 		let msgList = document.getElementById("msgList");
 		let send = document.getElementById("send");
@@ -100,7 +100,6 @@
 			});
 			socket.on("socketid notice", id => {
 				mySocketId = id;
-				console.log(mySocketId);
 			});
 		})
 		//message送信
@@ -113,7 +112,7 @@
 			}
 		});
 		//enterで送信
-		msg.addEventListener("keypress", function (e) {
+		msg.addEventListener("keypress", e => {
 			if(e.keyCode == "13"){
 				if(msg.value != ""){
 					socket.emit("chat message", msg.value);
