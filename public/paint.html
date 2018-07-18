@@ -104,17 +104,12 @@
 
 <body>
 	<div class="site">
-		<div class="circle"></div>
-		<div class="circle"></div>
-		<div class="circle"></div>
+
 		<p>ILLAST SPACE</p>
-		<div class="circle"></div>
-		<div class="circle"></div>
-		<div class="circle"></div>
+
 	</div>
 	<!--		<button type="button" name="popup_btn">Input your name</button>-->
-	<div id="area"></div>
-	<div id=layer>
+	<div id=layer class=layer>
 		<canvas id="canvas1" width="600" height="600"></canvas>
 		<canvas id="canvas2" width="600" height="600"></canvas>
 		<canvas id="canvas3" width="600" height="600"></canvas>
@@ -126,8 +121,9 @@
 		<canvas id="canvas9" width="600" height="600"></canvas>
 		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
+	<script src="jscolor.js"></script>
 	<div class="colors">
-		<script src="jscolor.js"></script>
+
 		<button onclick="document.getElementById('foo').jscolor.show()">
 			Show Picker</button>
 
@@ -145,13 +141,6 @@
 		<input type="range" min="1" max="50" value="10" id="lineWidth">
 		<span id="lineNum">10</span>
 	</p>
-	<div id="chat">
-		<input type="text" id="chatarea" placeholder="CHAT AREA"></input>
-		<button id="send" type="button">SEND</button>
-		<div id="log">
-			<ul id="msgList"></ul>
-		</div>
-	</div>
 	<div id="sum">
 		<canvas id="s_canvas1" width="600" height="600"></canvas>
 		<canvas id="s_canvas2" width="600" height="600"></canvas>
@@ -164,6 +153,14 @@
 		<canvas id="s_canvas9" width="600" height="600"></canvas>
 		<canvas id="s_canvas10" width="600" height="600"></canvas>
 	</div>
+	<div id="chat">
+		<input type="text" id="chatarea" placeholder="CHAT AREA"></input>
+		<button id="send" type="button">SEND</button>
+		<div id="log">
+			<ul id="msgList"></ul>
+		</div>
+	</div>
+
 	<script>
 	//chat
 	var hostname = location.hostname;
