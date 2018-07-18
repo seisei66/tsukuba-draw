@@ -258,6 +258,7 @@
 		let reset = document.getElementById("reset");
 		let eraser = document.getElementById("eraser");
 		let n_layer = document.getElementById("n_layer");
+		let pre_layer = "0";
 
 		let pixel_data = [];
 		let bef_pix;
@@ -309,11 +310,12 @@
 				if (!layer_used[Number(e.target.value) - 1]) {
 					socket.emit("layer changed", Number(e.target.value) - 1);
 					canvas.style.display = "none";
-					canvas.style.zIndex = "0";
+					canvas.style.zIndex = pre_layer;
 					canvas = layers[Number(e.target.value) - 1];
 					ctx = canvas.getContext("2d");
 					canvas.style.display = "inline";
 					canvas.style.zIndex = "10";
+					pre_layer = String(Number(e.target.value) - 1);
 				} else {
 					console.log(mySocketId);
 					n_layer.value = layer_used.indexOf(mySocketId) + 1;
@@ -344,6 +346,7 @@
 								canvas.style.display = "inline";
 								canvas.style.zIndex = "10";
 								*/
+				/*デバッグ用*/
 				console.log(canvas.style);
 			}
 		});
@@ -354,6 +357,11 @@
 			ctx.lineWidth = document.getElementById("lineWidth").value;
 			mouseX = e.clientX - rect.left;
 			mouseY = e.clientY - rect.top;
+			if (mouseX >= 500 || mouseX < 0 || mouseY >= 500 || mouseY < 0) {
+				draw_f = false;
+				_last = 0;
+				return;
+			}
 			if (e.pointerType === "pen") {
 				alpha = e.pressure;
 				ctx.lineWidth = document.getElementById("lineWidth").value * e.pressure;
