@@ -96,6 +96,7 @@
 	-->
 	<script src="../socket.io/socket.io.js"></script>
 	<script>
+	/*
 		var hostname = location.hostname;
 		var socket = io();
 		emit = function (name, data) {
@@ -119,6 +120,7 @@
 					msg.value("");
 				};
 				*/
+				/*
 			let user = window.prompt("ユーザー名を入力してください", "");
 			let mySocketId;
 			//if(user == NULL) location.href="/public/inde.html";
@@ -173,6 +175,7 @@
 
 			//chatここまで
 		};
+		*/
 	</script>
 </head>
 
@@ -239,6 +242,96 @@
 		<canvas id="s_canvas10" width="600" height="600"></canvas>
 	</div>
 	<script>
+	//chat
+	var hostname = location.hostname;
+	var socket = io();
+	emit = function (name, data) {
+		// json → 文字列に変換して送信する関数
+		socket.emit(name, JSON.stringify(data));
+	};
+
+	window.onload = function () {
+		//chat
+		//			var form = document.getElementById("textarea");
+		let msg = document.getElementById("chatarea");
+		let msgList = document.getElementById("msgList");
+		let send = document.getElementById("send");
+		let popupBtn = document.getElementById("popup_btn");
+		let popup = document.getElementById("popup");
+
+		/*
+			send.onclick = function() {
+		//		var msgjson = JSON.stringify(msg.value());
+				socket.emit("chat message", msg.value);
+				msg.value("");
+			};
+			*/
+		let user = window.prompt("ユーザー名を入力してください", "");
+		let mySocketId;
+		//if(user == NULL) location.href="/public/inde.html";
+		socket.emit("username", user);//動作確認してない
+
+		socket.on("connect", () => {
+			socket.on("userlist", userlist => {
+				let peoplelist = userlist;
+			});
+			socket.on("socketid notice", id => {
+				mySocketId = id;
+				console.log(mySocketId);
+			});
+		})
+
+		send.addEventListener("click", e => {
+			if(msg.value != ""){
+				socket.emit("chat message", msg.value);
+				console.log({ text: msg.value });
+				console.log(msg.value);
+				msg.value = "";
+			}
+		});
+
+		msg.addEventListener("keypress", e => {
+			if(e.keyCode == "13"){
+				if(msg.value != ""){
+					socket.emit("chat message", msg.value);
+					console.log({text: msg.value});
+					console.log(msg.value);
+					msg.value = "";
+				}
+			}
+		});
+
+		socket.on("chat message", data => {
+			let li = document.createElement('li');// liタグ作成
+			li.innerText = data; // liタグに値を入れる
+			msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
+		});
+
+		socket.on("layer changed", layerlst => {
+			layer_used = layerlst;
+		});
+
+		socket.on("layer notice", layernum => {
+			n_layer.value = layernum + 1;
+		})
+
+		socket.on("username", name => {
+			let liname = document.createElement('li');
+			liname.innerText = name + 'さんが入室しました';
+			msgList.appendChild(liname);
+		});
+
+		socket.on("exit user", name => {
+			let liexit = document.createElement('li');
+			liexit.innerText = name + 'さんが退室しました';
+			msgList.appendChild(liexit);
+		})
+
+
+
+	};
+	//chatここまで
+
 		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
 		let s_layers = [document.getElementById("s_canvas1"), document.getElementById("s_canvas2"), document.getElementById("s_canvas3"), document.getElementById("s_canvas4"), document.getElementById("s_canvas5"), document.getElementById("s_canvas6"), document.getElementById("s_canvas7"), document.getElementById("s_canvas8"), document.getElementById("s_canvas9"), document.getElementById("s_canvas10")];
 		let canvas = layers[0];
@@ -260,7 +353,7 @@
 		let reset_f = false;
 		let buffx = [];
 		let buffy = [];
-		let layer_used = [];
+		let layer_used = new Array(10);
 		let last = 0;
 		let _last = 0;
 		let last_undo = -1;
@@ -297,15 +390,26 @@
 			// canvas.style.zIndex = "0";
 			//layer番号送信
 			if (Number(e.target.value) >= 1 && Number(e.target.value) <= 10) {
+				if(!layer_used[Number(e.target.value)-1]) {
+					socket.emit("layer changed", Number(e.target.value)-1);
+					canvas.style.display = "none";
+					canvas.style.zIndex = "0";
+					canvas = layers[Number(e.target.value) - 1];
+					ctx = canvas.getContext("2d");
+					canvas.style.display = "inline";
+					canvas.style.zIndex = "10";
+				} else {
+					n_layer.value = mySocketId;
+				}
+/*
+				console.log(Number(e.target.value));
 				canvas.style.display = "none";
 				canvas.style.zIndex = "0";
-				let layernum = Number(e.target.value) - 1;
-				canvas = layers[layernum];
-				ctx = canvas.getContext("2d");
-				canvas.style.display = "inline";
-				canvas.style.zIndex = "10";
+				let layernum = Number(e.target.value);
 				if (!layer_used[layernum]) {
+					console.log(layer_used[layernum]);
 					socket.emit("layer changed", layernum);
+					console.log(layer_used[layernum]);
 					canvas = layer[layernum];
 					ctx = canvas.getContext("2d");
 					// canvas.style.display = "inline";
@@ -313,12 +417,18 @@
 				} else {
 					e.target.value = layer_used.indexOf(mySocketId);
 				}
+				canvas.style.display = "inline";
+				canvas.style.zIndex = "10";
+
+				canvas.style.display = "none";
+				canvas.style.zIndex = "0";
+//				canvas = layers[Number(e.target.value) - 1];
+//				ctx = canvas.getContext("2d");
+				canvas.style.display = "inline";
+				canvas.style.zIndex = "10";
+				*/
 				console.log(canvas.style);
 			}
-		});
-
-		socket.on("layer changed", layerlst => {
-			layer_used = layerlst;
 		});
 
 

@@ -130,19 +130,24 @@ let layerlst = new Array(10);
 //ユーザー入室時
 io.sockets.on('connect', socket => {
   socket.on('username', username => {
+    io.to(socket.id).emit('socketid notice', socket.id);
     people[socket.id] = username;
     let userlist = [];
+    let i;
     for(key in people){
       userlist.push(people[key]);
       console.log(people);
       console.log(userlist);
     }
-    for(let i=0; i<10; i++){
-      if(!layerlst[i]) layerlst[i] = socket.id;
-      break;
+    for(i=0; i<10; i++){
+      if(!layerlst[i]) {
+        layerlst[i] = socket.id;
+        break;
+      }
     }
+    io.to(socket.id).emit('layer notice', i)
     io.emit('layer changed', layerlst);
-    io.emit('socketid notice', socket.id);
+    console.log(layerlst);
     io.emit('username', username);
     io.emit('userlist', userlist);//empty考える
   });
@@ -157,7 +162,7 @@ io.sockets.on('connect', socket => {
   socket.on('disconnect', function(){
     io.emit('exit user', people[socket.id]);
     delete people[socket.id];
-    layerlst[socket.id] = 0;
+    layerlst[socket.id] = null;
     io.emit('layer changed', layerlst);
   });
 
@@ -168,7 +173,7 @@ io.sockets.on('connect', socket => {
 
   //描画レイヤー変更時
   socket.on('layer changed', layernum => {
-    layerlst[layerlst.indexOf(socket.id)] = 0;
+    layerlst[layerlst.indexOf(socket.id)] = null;
     layerlst[layernum] = socket.id;
     io.emit('layer changed', layerlst);
     console.log(layerlst);
