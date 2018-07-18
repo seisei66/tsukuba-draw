@@ -8,98 +8,9 @@
 	<link href="https://fonts.googleapis.com/css?family=Paytone+One|Source+Sans+Pro:300,700" rel="stylesheet">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="/public/stylesheets/style2.css" rel="stylesheet">
-	<title>●○●CHAT ROOM●○●</title>
-
-	<!--
-		<script id=io type="text/javascript" src="">
-			var hostname = location.hostname;
-			var path = path.join(hostname, 'socket.io', 'socket.io.js');
-			document.getElementById("io").src = path;
-		</script>
-	-->
+	<title>CHAT ROOM</title>
 	<script src="../socket.io/socket.io.js"></script>
-	<script>
-	/*
-		var hostname = location.hostname;
-		var socket = io();
-		emit = function (name, data) {
-			// json → 文字列に変換して送信する関数
-			socket.emit(name, JSON.stringify(data));
-		};
-
-		window.onload = function () {
-			//chat
-			//			var form = document.getElementById("textarea");
-			let msg = document.getElementById("chatarea");
-			let msgList = document.getElementById("msgList");
-			let send = document.getElementById("send");
-			let popupBtn = document.getElementById("popup_btn");
-			let popup = document.getElementById("popup");
-
-			/*
-				send.onclick = function() {
-			//		var msgjson = JSON.stringify(msg.value());
-					socket.emit("chat message", msg.value);
-					msg.value("");
-				};
-				*/
-				/*
-			let user = window.prompt("ユーザー名を入力してください", "");
-			let mySocketId;
-			//if(user == NULL) location.href="/public/inde.html";
-			socket.emit("username", user);//動作確認してない
-
-			socket.on("connect", () => {
-				socket.on("userlist", userlist => {
-					let peoplelist = userlist;
-				});
-				socket.on("socketid notice", id => {
-					mySocketId = id;
-				});
-			})
-
-			send.addEventListener("click", e => {
-				if(msg.value != ""){
-					socket.emit("chat message", msg.value);
-					console.log({ text: msg.value });
-					console.log(msg.value);
-					msg.value = "";
-				}
-			});
-
-			msg.addEventListener("keypress", e => {
-				if(e.keyCode == "13"){
-					if(msg.value != ""){
-						socket.emit("chat message", msg.value);
-						console.log({text: msg.value});
-						console.log(msg.value);
-						msg.value = "";
-					}
-				}
-			});
-
-			socket.on("chat message", data => {
-				let li = document.createElement('li');// liタグ作成
-				li.innerText = data; // liタグに値を入れる
-				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
-			});
-
-			socket.on("username", name => {
-				let liname = document.createElement('li');
-				liname.innerText = name + 'さんが入室しました';
-				msgList.appendChild(liname);
-			});
-
-			socket.on("exit user", name => {
-				let liexit = document.createElement('li');
-				liexit.innerText = name + 'さんが退室しました';
-				msgList.appendChild(liexit);
-			})
-
-			//chatここまで
-		};
-		*/
-	</script>
+	<script src="jscolor.js"></script>
 </head>
 
 <body>
@@ -108,8 +19,20 @@
 		<p>ILLAST SPACE</p>
 
 	</div>
-	<!--		<button type="button" name="popup_btn">Input your name</button>-->
-	<div id=layer class=layer>
+
+	<div id="layer" class="layer">
+		<div id="layerbtn" class="layerbtn">
+			<button type="button" id="layerbtn1">Layer 1</button>
+			<button type="button" id="layerbtn2">Layer 2</button>
+			<button type="button" id="layerbtn3">Layer 3</button>
+			<button type="button" id="layerbtn4">Layer 4</button>
+			<button type="button" id="layerbtn5">Layer 5</button>
+			<button type="button" id="layerbtn6">Layer 6</button>
+			<button type="button" id="layerbtn7">Layer 7</button>
+			<button type="button" id="layerbtn8">Layer 8</button>
+			<button type="button" id="layerbtn9">Layer 9</button>
+			<button type="button" id="layerbtn10">Layer 10</button>
+		</div>
 		<canvas id="canvas1" width="600" height="600"></canvas>
 		<canvas id="canvas2" width="600" height="600"></canvas>
 		<canvas id="canvas3" width="600" height="600"></canvas>
@@ -121,7 +44,6 @@
 		<canvas id="canvas9" width="600" height="600"></canvas>
 		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
-	<script src="jscolor.js"></script>
 	<div class="colors">
 
 		<button onclick="document.getElementById('foo').jscolor.show()">
@@ -164,7 +86,6 @@
 
 	<script>
 	//chat
-	var hostname = location.hostname;
 	var socket = io();
 	emit = function (name, data) {
 		// json → 文字列に変換して送信する関数
@@ -173,25 +94,14 @@
 
 	let mySocketId;
 	window.onload = function () {
-		//chat
-		//			var form = document.getElementById("textarea");
 		let msg = document.getElementById("chatarea");
 		let msgList = document.getElementById("msgList");
 		let send = document.getElementById("send");
 		let popupBtn = document.getElementById("popup_btn");
 		let popup = document.getElementById("popup");
-
-		/*
-			send.onclick = function() {
-		//		var msgjson = JSON.stringify(msg.value());
-				socket.emit("chat message", msg.value);
-				msg.value("");
-			};
-			*/
 		let user = window.prompt("ユーザー名を入力してください", "");
-		//if(user == NULL) location.href="/public/inde.html";
 		socket.emit("username", user);//動作確認してない
-
+		//接続開始
 		socket.on("connect", () => {
 			socket.on("userlist", userlist => {
 				let peoplelist = userlist;
@@ -201,7 +111,7 @@
 				console.log(mySocketId);
 			});
 		})
-
+		//message送信
 		send.addEventListener("click", e => {
 			if(msg.value != ""){
 				socket.emit("chat message", msg.value);
@@ -210,7 +120,7 @@
 				msg.value = "";
 			}
 		});
-
+		//enterで送信
 		msg.addEventListener("keypress", e => {
 			if(e.keyCode == "13"){
 				if(msg.value != ""){
@@ -221,27 +131,27 @@
 				}
 			}
 		});
-
+		//新規レイヤー割り当て
+		socket.on("layer notice", layernum => {
+			n_layer.value = layernum + 1;
+		})
+		//message送信
 		socket.on("chat message", data => {
 			let li = document.createElement('li');// liタグ作成
 			li.innerText = data; // liタグに値を入れる
 			msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
 		});
-
+		//レイヤー変更時
 		socket.on("layer changed", layerlst => {
 			layer_used = layerlst;
 		});
-
-		socket.on("layer notice", layernum => {
-			n_layer.value = layernum + 1;
-		})
-
+		//ユーザー入室時
 		socket.on("username", name => {
 			let liname = document.createElement('li');
 			liname.innerText = name + 'さんが入室しました';
 			msgList.appendChild(liname);
 		});
-
+		//ユーザー退室時
 		socket.on("exit user", name => {
 			let liexit = document.createElement('li');
 			liexit.innerText = name + 'さんが退室しました';
@@ -306,6 +216,7 @@
 			pen = !pen;
 		});
 
+		/*
 		n_layer.addEventListener("change", function (e) {
 			// canvas.style.display = "none";
 			// canvas.style.zIndex = "0";
@@ -323,36 +234,75 @@
 					console.log(mySocketId);
 					n_layer.value = layer_used.indexOf(mySocketId) + 1;
 				}
-/*
-				console.log(Number(e.target.value));
-				canvas.style.display = "none";
-				canvas.style.zIndex = "0";
-				let layernum = Number(e.target.value);
-				if (!layer_used[layernum]) {
-					console.log(layer_used[layernum]);
-					socket.emit("layer changed", layernum);
-					console.log(layer_used[layernum]);
-					canvas = layer[layernum];
-					ctx = canvas.getContext("2d");
-					// canvas.style.display = "inline";
-					// canvas.style.zIndex = "10";
-				} else {
-					e.target.value = layer_used.indexOf(mySocketId);
-				}
-				canvas.style.display = "inline";
-				canvas.style.zIndex = "10";
-
-				canvas.style.display = "none";
-				canvas.style.zIndex = "0";
-//				canvas = layers[Number(e.target.value) - 1];
-//				ctx = canvas.getContext("2d");
-				canvas.style.display = "inline";
-				canvas.style.zIndex = "10";
-				*/
 				console.log(canvas.style);
 			}
 		});
+			*/
+		layerbtn1 = document.getElementById("layerbtn1");
+		layerbtn2 = document.getElementById("layerbtn2");
+		layerbtn3 = document.getElementById("layerbtn3");
+		layerbtn4 = document.getElementById("layerbtn4");
+		layerbtn5 = document.getElementById("layerbtn5");
+		layerbtn6 = document.getElementById("layerbtn6");
+		layerbtn7 = document.getElementById("layerbtn7");
+		layerbtn8 = document.getElementById("layerbtn8");
+		layerbtn9 = document.getElementById("layerbtn9");
+		layerbtn10 = document.getElementById("layerbtn10");
 
+
+		layerbtn1.addEventListener("click", function (e) {
+			layerchange(1);
+		});
+		layerbtn2.addEventListener("click", function (e) {
+			layerchange(2);
+		});
+		layerbtn3.addEventListener("click", function (e) {
+			layerchange(3);
+		});
+		layerbtn4.addEventListener("click", function (e) {
+			layerchange(4);
+		});
+		layerbtn5.addEventListener("click", function (e) {
+			layerchange(5);
+		});
+		layerbtn6.addEventListener("click", function (e) {
+			layerchange(6);
+		});
+		layerbtn7.addEventListener("click", function (e) {
+			layerchange(7);
+		});
+		layerbtn8.addEventListener("click", function (e) {
+			layerchange(8);
+		});
+		layerbtn9.addEventListener("click", function (e) {
+			layerchange(9);
+		});
+		layerbtn10.addEventListener("click", function (e) {
+			layerchange(10);
+		});
+
+
+
+
+
+let pre_layer = "0";
+
+		function layerchange(number) {
+			console.log("layerchange");
+			if(!layer_used[number-1]) {
+				socket.emit("layer changed", number-1);
+				canvas.style.display = "none";
+				canvas.style.zIndex = pre_layer;
+				canvas = layers[number - 1];
+				ctx = canvas.getContext("2d");
+				canvas.style.display = "inline";
+				canvas.style.zIndex = "10";
+				pre_layer = String(number-1);
+				n_layer.value = number;
+			} else {
+				n_layer.value = layer_used.indexOf(mySocketId) + 1;
+			}
+		};
 
 		layer.addEventListener("pointermove", function (e) {
 			var rect = e.target.getBoundingClientRect();

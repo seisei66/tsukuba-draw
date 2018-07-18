@@ -162,7 +162,7 @@ io.sockets.on('connect', socket => {
   socket.on('disconnect', function(){
     io.emit('exit user', people[socket.id]);
     delete people[socket.id];
-    layerlst[socket.id] = void 0;
+    layerlst[layerlst.indexOf(socket.id)] = void 0;
     io.emit('layer changed', layerlst);
   });
 
