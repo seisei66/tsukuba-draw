@@ -1,9 +1,9 @@
 @charset "UTF-8";
 body  {
        display: -ms-grid;
-       -ms-grid-columns: 3fr 600px 2fr;
+	     -ms-grid-columns: 3fr 600px 2fr;
        -ms-grid-rows:1fr 600px 600px;
-}
+     }
 .site {
        -ms-grid-column:1;
 	     -ms-grid-column-span:3;
@@ -30,6 +30,7 @@ body  {
   background-color: #f0f0f0;
 }
 
+
 body  {display: grid;
       grid-template-areas:
                 "head head head"
@@ -39,13 +40,13 @@ body  {display: grid;
       grid-template-rows: 1fr 600px 600px;
        margin: 0;
        font-family: 'Source Sans Pro', 'メイリオ',
-       'Hiragino Kaku Gothic Pro', sans-serif
+       'Hiragino Kaku Gothic Pro', sans-serif;
        }
 
 .site  {
        grid-area: head;
        background-color: #cf6766;
-       padding: 10px;
+       padding: 0;
        text-align: center}
 
 .site p  {color: #ffffff;
@@ -75,10 +76,6 @@ input   {
          font-size: 14px;
          text-decoration: none;
          list-style: none;}
-.layer canvas{
-  grid-area: main;
-  margin: auto;
-｝
 button {
              display: inline-block;
              padding: 0.3em 1em;
@@ -93,64 +90,65 @@ button:hover {
              background: #67c5ff;
              color: white;
          }
+.layer canvas{
+  grid-area: main;
+  margin: auto;
+}
 #layer canvas {
-	border: solid 1px black;
-	position: absolute;
-	}
+  border: solid 1px black;
+  position: absolute;
+}
 #layer {
-	position: relative;
-	}
+  position: relative;
+}
 #sum canvas {
-	border: solid 1px black;
-	position: absolute;
-	}
+  border: solid 1px black;
+  position: absolute;
+}
 #sum {
-	position: relative;
-	}
+  position: relative;
+}
 #canvas1,
 #s_canvas1 {
-	z-index: 0;
-	}
+  z-index: 0;
+}
 #canvas2,
 #s_canvas2 {
-	z-index: 1;
-	}
+  z-index: 1;
+}
 #canvas3,
 #s_canvas3 {
-	z-index: 2;
-	}
+  z-index: 2;
+}
 #canvas4,
 #s_canvas4 {
-	z-index: 3;
-	}
+  z-index: 3;
+}
 #canvas5,
 #s_canvas5 {
-	z-index: 4;
-	}
+  z-index: 4;
+}
 #canvas6,
 #s_canvas6 {
-	z-index: 5;
-	}
+  z-index: 5;
+}
 #canvas7,
 #s_canvas7 {
-	z-index: 6;
-	}
+  z-index: 6;
+}
 #canvas8,
 #s_canvas8 {
-	z-index: 7;
-	}
+  z-index: 7;
+}
 #canvas9,
 #s_canvas9 {
-	z-index: 8;
-	}
+  z-index: 8;
+}
 #canvas10,
 #s_canvas10 {
-	z-index: 9;
-	}
-
+  z-index: 9;
+}
 #chat{
   grid-area: side2;
   background-color: #f0f0f0;
 }
-
-
