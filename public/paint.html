@@ -15,54 +15,48 @@
 
 <body>
 	<div class="site">
-
 		<p>ILLAST SPACE</p>
-
 	</div>
 
-	<div id="layer" class="layer">
-		<div id="layerbtn" class="layerbtn">
-			<button type="button" id="layerbtn1">Layer 1</button>
-			<button type="button" id="layerbtn2">Layer 2</button>
-			<button type="button" id="layerbtn3">Layer 3</button>
-			<button type="button" id="layerbtn4">Layer 4</button>
-			<button type="button" id="layerbtn5">Layer 5</button>
-			<button type="button" id="layerbtn6">Layer 6</button>
-			<button type="button" id="layerbtn7">Layer 7</button>
-			<button type="button" id="layerbtn8">Layer 8</button>
-			<button type="button" id="layerbtn9">Layer 9</button>
-			<button type="button" id="layerbtn10">Layer 10</button>
-		</div>
-		<canvas id="canvas1" width="600" height="600"></canvas>
-		<canvas id="canvas2" width="600" height="600"></canvas>
-		<canvas id="canvas3" width="600" height="600"></canvas>
-		<canvas id="canvas4" width="600" height="600"></canvas>
-		<canvas id="canvas5" width="600" height="600"></canvas>
-		<canvas id="canvas6" width="600" height="600"></canvas>
-		<canvas id="canvas7" width="600" height="600"></canvas>
-		<canvas id="canvas8" width="600" height="600"></canvas>
-		<canvas id="canvas9" width="600" height="600"></canvas>
-		<canvas id="canvas10" width="600" height="600"></canvas>
+<div id=layer class="layer">
+	<div id="layerbtn" class="layerbtn">
+		<button type="button" id="layerbtn1">Layer 1</button>
+		<button type="button" id="layerbtn2">Layer 2</button>
+		<button type="button" id="layerbtn3">Layer 3</button>
+		<button type="button" id="layerbtn4">Layer 4</button>
+		<button type="button" id="layerbtn5">Layer 5</button>
+		<button type="button" id="layerbtn6">Layer 6</button>
+		<button type="button" id="layerbtn7">Layer 7</button>
+		<button type="button" id="layerbtn8">Layer 8</button>
+		<button type="button" id="layerbtn9">Layer 9</button>
+		<button type="button" id="layerbtn10">Layer 10</button>
 	</div>
-	<div class="colors">
+	<canvas id="canvas1" width="600" height="600"></canvas>
+	<canvas id="canvas2" width="600" height="600"></canvas>
+	<canvas id="canvas3" width="600" height="600"></canvas>
+	<canvas id="canvas4" width="600" height="600"></canvas>
+	<canvas id="canvas5" width="600" height="600"></canvas>
+	<canvas id="canvas6" width="600" height="600"></canvas>
+	<canvas id="canvas7" width="600" height="600"></canvas>
+	<canvas id="canvas8" width="600" height="600"></canvas>
+	<canvas id="canvas9" width="600" height="600"></canvas>
+	<canvas id="canvas10" width="600" height="600"></canvas>
+</div>
+<div class="colors">
+	<button onclick="document.getElementById('foo').jscolor.show()">
+	    Show Picker</button>
 
-		<button onclick="document.getElementById('foo').jscolor.show()">
-			Show Picker</button>
+	<button onclick="document.getElementById('foo').jscolor.hide()">
+	    Hide Picker</button>
 
-		<button onclick="document.getElementById('foo').jscolor.hide()">
-			Hide Picker</button>
+	<p><input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
+	</input>
+	<input id="n_layer" type="number" max=10 min=1 value=1>layer</input>
+	<button id="reset" type="button">リセット</button>
+	<button id="undo" type="button">undo</button>
+	<button id="eraser" type="button">消しゴム</button>
+	<p>線の太さ<input type="range" min="0" max="100" value="10" id="lineWidth"><span id="lineNum">10</span></p>
 
-		<p>
-			<input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
-			</input>
-			<input id="n_layer" type="number" max=10 min=1 value=1></input>
-			<button id="reset" type="button">リセット</button>
-			<button id="eraser" type="button">消しゴム</button>
-
-	<p>線の太さ
-		<input type="range" min="1" max="50" value="10" id="lineWidth">
-		<span id="lineNum">10</span>
-	</p>
 	<div id="sum">
 		<canvas id="s_canvas1" width="600" height="600"></canvas>
 		<canvas id="s_canvas2" width="600" height="600"></canvas>
@@ -75,16 +69,14 @@
 		<canvas id="s_canvas9" width="600" height="600"></canvas>
 		<canvas id="s_canvas10" width="600" height="600"></canvas>
 	</div>
-	</div>
-	<div id="chat">
-		<input type="text" id="chatarea" placeholder="CHAT AREA"></input>
-		<button id="send" type="button">SEND</button>
-		<div id="log">
-			<ul id="msgList"></ul>
-		</div>
-	</div>
-
-	<script>
+</div>
+<div id="chat">
+        <textarea name="" id="textarea" cols="15" rows="3"></textarea>
+        <button id="send" type="button">SEND</button>
+        <div id="log"><ul id="msgList"></ul></div>
+        <div id="clients"></div>
+</div>
+<script>
 	//chat
 	var socket = io();
 	emit = function (name, data) {
@@ -121,7 +113,7 @@
 			}
 		});
 		//enterで送信
-		msg.addEventListener("keypress", e => {
+		msg.addEventListener("keypress", function (e) {
 			if(e.keyCode == "13"){
 				if(msg.value != ""){
 					socket.emit("chat message", msg.value);
@@ -157,9 +149,6 @@
 			liexit.innerText = name + 'さんが退室しました';
 			msgList.appendChild(liexit);
 		})
-
-
-
 	};
 	//chatここまで
 
@@ -464,7 +453,6 @@ let pre_layer = "0";
 			s_layers[num - 1].getContext('2d').putImageData(layers[num - 1].getContext('2d').getImageData(0, 0, canvas.width, canvas.height), 0, 0);
 		}
 	</script>
-
 </body>
 
 </html>
