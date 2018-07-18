@@ -18,138 +18,144 @@
 		<p>ILLAST SPACE</p>
 	</div>
 
-<div id=layer class="layer">
-	<div id="layerbtn" class="layerbtn">
-		<button type="button" id="layerbtn1">Layer 1</button>
-		<button type="button" id="layerbtn2">Layer 2</button>
-		<button type="button" id="layerbtn3">Layer 3</button>
-		<button type="button" id="layerbtn4">Layer 4</button>
-		<button type="button" id="layerbtn5">Layer 5</button>
-		<button type="button" id="layerbtn6">Layer 6</button>
-		<button type="button" id="layerbtn7">Layer 7</button>
-		<button type="button" id="layerbtn8">Layer 8</button>
-		<button type="button" id="layerbtn9">Layer 9</button>
-		<button type="button" id="layerbtn10">Layer 10</button>
+	<div id=layer class="layer">
+		<div id="layerbtn" class="layerbtn">
+			<button type="button" id="layerbtn1">Layer 1</button>
+			<button type="button" id="layerbtn2">Layer 2</button>
+			<button type="button" id="layerbtn3">Layer 3</button>
+			<button type="button" id="layerbtn4">Layer 4</button>
+			<button type="button" id="layerbtn5">Layer 5</button>
+			<button type="button" id="layerbtn6">Layer 6</button>
+			<button type="button" id="layerbtn7">Layer 7</button>
+			<button type="button" id="layerbtn8">Layer 8</button>
+			<button type="button" id="layerbtn9">Layer 9</button>
+			<button type="button" id="layerbtn10">Layer 10</button>
+		</div>
+		<canvas id="canvas1" width="600" height="600"></canvas>
+		<canvas id="canvas2" width="600" height="600"></canvas>
+		<canvas id="canvas3" width="600" height="600"></canvas>
+		<canvas id="canvas4" width="600" height="600"></canvas>
+		<canvas id="canvas5" width="600" height="600"></canvas>
+		<canvas id="canvas6" width="600" height="600"></canvas>
+		<canvas id="canvas7" width="600" height="600"></canvas>
+		<canvas id="canvas8" width="600" height="600"></canvas>
+		<canvas id="canvas9" width="600" height="600"></canvas>
+		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
-	<canvas id="canvas1" width="600" height="600"></canvas>
-	<canvas id="canvas2" width="600" height="600"></canvas>
-	<canvas id="canvas3" width="600" height="600"></canvas>
-	<canvas id="canvas4" width="600" height="600"></canvas>
-	<canvas id="canvas5" width="600" height="600"></canvas>
-	<canvas id="canvas6" width="600" height="600"></canvas>
-	<canvas id="canvas7" width="600" height="600"></canvas>
-	<canvas id="canvas8" width="600" height="600"></canvas>
-	<canvas id="canvas9" width="600" height="600"></canvas>
-	<canvas id="canvas10" width="600" height="600"></canvas>
-</div>
-<div class="colors">
-	<button onclick="document.getElementById('foo').jscolor.show()">
-	    Show Picker</button>
+	<div class="colors">
+		<button onclick="document.getElementById('foo').jscolor.show()">
+			Show Picker</button>
 
-	<button onclick="document.getElementById('foo').jscolor.hide()">
-	    Hide Picker</button>
+		<button onclick="document.getElementById('foo').jscolor.hide()">
+			Hide Picker</button>
 
-	<p><input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
-	</input>
-	<input id="n_layer" type="number" max=10 min=1 value=1>layer</input>
-	<button id="reset" type="button">リセット</button>
-	<button id="undo" type="button">undo</button>
-	<button id="eraser" type="button">消しゴム</button>
-	<p>線の太さ<input type="range" min="0" max="100" value="10" id="lineWidth"><span id="lineNum">10</span></p>
+		<p>
+			<input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
+			</input>
+			<input id="n_layer" type="number" max=10 min=1 value=1>layer</input>
+			<button id="reset" type="button">リセット</button>
+			<button id="undo" type="button">undo</button>
+			<button id="eraser" type="button">消しゴム</button>
+			<p>線の太さ
+				<input type="range" min="0" max="100" value="10" id="lineWidth">
+				<span id="lineNum">10</span>
+			</p>
 
-	<div id="sum">
-		<canvas id="s_canvas1" width="600" height="600"></canvas>
-		<canvas id="s_canvas2" width="600" height="600"></canvas>
-		<canvas id="s_canvas3" width="600" height="600"></canvas>
-		<canvas id="s_canvas4" width="600" height="600"></canvas>
-		<canvas id="s_canvas5" width="600" height="600"></canvas>
-		<canvas id="s_canvas6" width="600" height="600"></canvas>
-		<canvas id="s_canvas7" width="600" height="600"></canvas>
-		<canvas id="s_canvas8" width="600" height="600"></canvas>
-		<canvas id="s_canvas9" width="600" height="600"></canvas>
-		<canvas id="s_canvas10" width="600" height="600"></canvas>
+			<div id="sum">
+				<canvas id="s_canvas1" width="600" height="600"></canvas>
+				<canvas id="s_canvas2" width="600" height="600"></canvas>
+				<canvas id="s_canvas3" width="600" height="600"></canvas>
+				<canvas id="s_canvas4" width="600" height="600"></canvas>
+				<canvas id="s_canvas5" width="600" height="600"></canvas>
+				<canvas id="s_canvas6" width="600" height="600"></canvas>
+				<canvas id="s_canvas7" width="600" height="600"></canvas>
+				<canvas id="s_canvas8" width="600" height="600"></canvas>
+				<canvas id="s_canvas9" width="600" height="600"></canvas>
+				<canvas id="s_canvas10" width="600" height="600"></canvas>
+			</div>
 	</div>
-</div>
-<div id="chat">
-        <textarea name="" id="textarea" cols="15" rows="3"></textarea>
-        <button id="send" type="button">SEND</button>
-        <div id="log"><ul id="msgList"></ul></div>
-        <div id="clients"></div>
-</div>
-<script>
-	//chat
-	var socket = io();
-	emit = function (name, data) {
-		// json → 文字列に変換して送信する関数
-		socket.emit(name, JSON.stringify(data));
-	};
+	<div id="chat">
+		<textarea name="" id="textarea" cols="15" rows="3"></textarea>
+		<button id="send" type="button">SEND</button>
+		<div id="log">
+			<ul id="msgList"></ul>
+		</div>
+		<div id="clients"></div>
+	</div>
+	<script>
+		//chat
+		var socket = io();
+		emit = function (name, data) {
+			// json → 文字列に変換して送信する関数
+			socket.emit(name, JSON.stringify(data));
+		};
 
-	let mySocketId;
-	window.onload = () => {
-		let msg = document.getElementById("chatarea");
-		let msgList = document.getElementById("msgList");
-		let send = document.getElementById("send");
-		let popupBtn = document.getElementById("popup_btn");
-		let popup = document.getElementById("popup");
-		let user = window.prompt("ユーザー名を入力してください", "");
-		socket.emit("username", user);//動作確認してない
-		//接続開始
-		socket.on("connect", () => {
-			socket.on("userlist", userlist => {
-				let peoplelist = userlist;
-			});
-			socket.on("socketid notice", id => {
-				mySocketId = id;
-			});
-		})
-		//message送信
-		send.addEventListener("click", e => {
-			if(msg.value != ""){
-				socket.emit("chat message", msg.value);
-				console.log({ text: msg.value });
-				console.log(msg.value);
-				msg.value = "";
-			}
-		});
-		//enterで送信
-		msg.addEventListener("keypress", e => {
-			if(e.keyCode == "13"){
-				if(msg.value != ""){
+		let mySocketId;
+		window.onload = () => {
+			let msg = document.getElementById("chatarea");
+			let msgList = document.getElementById("msgList");
+			let send = document.getElementById("send");
+			let popupBtn = document.getElementById("popup_btn");
+			let popup = document.getElementById("popup");
+			let user = window.prompt("ユーザー名を入力してください", "");
+			socket.emit("username", user);//動作確認してない
+			//接続開始
+			socket.on("connect", () => {
+				socket.on("userlist", userlist => {
+					let peoplelist = userlist;
+				});
+				socket.on("socketid notice", id => {
+					mySocketId = id;
+				});
+			})
+			//message送信
+			send.addEventListener("click", e => {
+				if (msg.value != "") {
 					socket.emit("chat message", msg.value);
 					console.log({ text: msg.value });
 					console.log(msg.value);
 					msg.value = "";
 				}
-			}
-		});
-		//新規レイヤー割り当て
-		socket.on("layer notice", layernum => {
-			n_layer.value = layernum + 1;
-		})
-		//message送信
-		socket.on("chat message", data => {
-			let li = document.createElement('li');// liタグ作成
-			li.innerText = data; // liタグに値を入れる
-			msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
-		});
-		//レイヤー変更時
-		socket.on("layer changed", layerlst => {
-			layer_used = layerlst;
-		});
-		//ユーザー入室時
-		socket.on("username", name => {
-			let liname = document.createElement('li');
-			liname.innerText = name + 'さんが入室しました';
-			msgList.appendChild(liname);
-		});
-		//ユーザー退室時
-		socket.on("exit user", name => {
-			let liexit = document.createElement('li');
-			liexit.innerText = name + 'さんが退室しました';
-			msgList.appendChild(liexit);
-		})
-	};
-	//chatここまで
+			});
+			//enterで送信
+			msg.addEventListener("keypress", e => {
+				if (e.keyCode == "13") {
+					if (msg.value != "") {
+						socket.emit("chat message", msg.value);
+						console.log({ text: msg.value });
+						console.log(msg.value);
+						msg.value = "";
+					}
+				}
+			});
+			//新規レイヤー割り当て
+			socket.on("layer notice", layernum => {
+				n_layer.value = layernum + 1;
+			})
+			//message送信
+			socket.on("chat message", data => {
+				let li = document.createElement('li');// liタグ作成
+				li.innerText = data; // liタグに値を入れる
+				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
+			});
+			//レイヤー変更時
+			socket.on("layer changed", layerlst => {
+				layer_used = layerlst;
+			});
+			//ユーザー入室時
+			socket.on("username", name => {
+				let liname = document.createElement('li');
+				liname.innerText = name + 'さんが入室しました';
+				msgList.appendChild(liname);
+			});
+			//ユーザー退室時
+			socket.on("exit user", name => {
+				let liexit = document.createElement('li');
+				liexit.innerText = name + 'さんが退室しました';
+				msgList.appendChild(liexit);
+			})
+		};
+		//chatここまで
 
 		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
 		let s_layers = [document.getElementById("s_canvas1"), document.getElementById("s_canvas2"), document.getElementById("s_canvas3"), document.getElementById("s_canvas4"), document.getElementById("s_canvas5"), document.getElementById("s_canvas6"), document.getElementById("s_canvas7"), document.getElementById("s_canvas8"), document.getElementById("s_canvas9"), document.getElementById("s_canvas10")];
@@ -273,15 +279,15 @@
 
 		function layerchange(number) {
 			console.log("layerchange");
-			if(!layer_used[number-1]) {
-				socket.emit("layer changed", number-1);
+			if (!layer_used[number - 1]) {
+				socket.emit("layer changed", number - 1);
 				canvas.style.display = "none";
 				canvas.style.zIndex = pre_layer;
 				canvas = layers[number - 1];
 				ctx = canvas.getContext("2d");
 				canvas.style.display = "inline";
 				canvas.style.zIndex = "10";
-				pre_layer = String(number-1);
+				pre_layer = String(number - 1);
 				n_layer.value = number;
 			} else {
 				n_layer.value = layer_used.indexOf(mySocketId) + 1;
@@ -293,7 +299,7 @@
 			ctx.lineWidth = document.getElementById("lineWidth").value;
 			mouseX = e.clientX - rect.left;
 			mouseY = e.clientY - rect.top;
-			if (mouseX >= 500 || mouseX < 0 || mouseY >= 500 || mouseY < 0) {
+			if (mouseX >= 600 || mouseX < 0 || mouseY >= 600 || mouseY < 0) {
 				draw_f = false;
 				_last = 0;
 				return;
