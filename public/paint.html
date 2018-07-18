@@ -116,7 +116,7 @@
 			if(e.keyCode == "13"){
 				if(msg.value != ""){
 					socket.emit("chat message", msg.value);
-					console.log({text: msg.value});
+					console.log({ text: msg.value });
 					console.log(msg.value);
 					msg.value = "";
 				}
@@ -161,6 +161,7 @@
 		let reset = document.getElementById("reset");
 		let eraser = document.getElementById("eraser");
 		let n_layer = document.getElementById("n_layer");
+		let pre_layer = "0";
 
 		let pixel_data = [];
 		let bef_pix;
@@ -210,14 +211,15 @@
 			// canvas.style.zIndex = "0";
 			//layer番号送信
 			if (Number(e.target.value) >= 1 && Number(e.target.value) <= 10) {
-				if(!layer_used[Number(e.target.value)-1]) {
-					socket.emit("layer changed", Number(e.target.value)-1);
+				if (!layer_used[Number(e.target.value) - 1]) {
+					socket.emit("layer changed", Number(e.target.value) - 1);
 					canvas.style.display = "none";
-					canvas.style.zIndex = "0";
+					canvas.style.zIndex = pre_layer;
 					canvas = layers[Number(e.target.value) - 1];
 					ctx = canvas.getContext("2d");
 					canvas.style.display = "inline";
 					canvas.style.zIndex = "10";
+					pre_layer = String(Number(e.target.value) - 1);
 				} else {
 					console.log(mySocketId);
 					n_layer.value = layer_used.indexOf(mySocketId) + 1;
@@ -297,6 +299,11 @@ let pre_layer = "0";
 			ctx.lineWidth = document.getElementById("lineWidth").value;
 			mouseX = e.clientX - rect.left;
 			mouseY = e.clientY - rect.top;
+			if (mouseX >= 500 || mouseX < 0 || mouseY >= 500 || mouseY < 0) {
+				draw_f = false;
+				_last = 0;
+				return;
+			}
 			if (e.pointerType === "pen") {
 				alpha = e.pressure;
 				ctx.lineWidth = document.getElementById("lineWidth").value * e.pressure;
@@ -416,6 +423,8 @@ let pre_layer = "0";
 		});
 
 		let myWorker = new Worker("task.js");
+		let pix_app = new Worker("pix_app.js");
+
 		function get_pix() {
 			multi = true;
 			if (draw_f || f_reset) {
@@ -431,16 +440,30 @@ let pre_layer = "0";
 			sum(Number(n_layer.value));
 		}
 
-
 		myWorker.onmessage = function (e) {
 			//ピクセルデータ送信
-			console.log("a");
 			if (e.data)
 				pixel_data = e.data.pixel_data;
 			socket.emit("pixel data", pixel_data);
+			pixel_data = e.data.pixel_data;
 			bef_pix = e.data.bef_pix;
 			af_pix = e.data.af_pix;
 			setTimeout("get_pix()", 200);
+		}
+
+
+		/*受け取ったピクセルのデータとレイヤー番号を引数にして、canvasのデータに変換するfunction*/
+		function pix_conv(pixel_data, num) {
+			let wid = canvas.width;
+			let hei = canvas.height;
+			let pixels = layers[num - 1].getContext('2d').getImageData(0, 0, wid, hei);
+			let pix_get = { pixel_data: pixel_data, num: num, wid: wid, hei: hei, pixels: pixels };
+			pix_app.postMessage(pix_get);
+		}
+
+		pix_app.onmessage = function (e) {
+			apply(e.data.pixels, e.data.num);
+			sum(e.data.num);
 		}
 
 		lineWidth.addEventListener("mousemove", function () {
@@ -451,7 +474,12 @@ let pre_layer = "0";
 		function sum(num) {
 			s_layers[num - 1].getContext('2d').putImageData(layers[num - 1].getContext('2d').getImageData(0, 0, canvas.width, canvas.height), 0, 0);
 		}
+
+		function apply(pixels, num) {
+			layers[num - 1].getContext('2d').putImageData(pixels, 0, 0);
+		}
 	</script>
+
 </body>
 
 </html>
