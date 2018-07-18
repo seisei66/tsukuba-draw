@@ -71,7 +71,7 @@
 	</div>
 </div>
 <div id="chat">
-        <textarea name="" id="textarea" cols="15" rows="3"></textarea>
+        <textarea name="" id="chatarea" cols="15" rows="3"></textarea>
         <button id="send" type="button">SEND</button>
         <div id="log"><ul id="msgList"></ul></div>
         <div id="clients"></div>
@@ -84,71 +84,71 @@
 		socket.emit(name, JSON.stringify(data));
 	};
 
-	let mySocketId;
-	window.onload = () => {
-		let msg = document.getElementById("chatarea");
-		let msgList = document.getElementById("msgList");
-		let send = document.getElementById("send");
-		let popupBtn = document.getElementById("popup_btn");
-		let popup = document.getElementById("popup");
-		let user = window.prompt("ユーザー名を入力してください", "");
-		socket.emit("username", user);//動作確認してない
-		//接続開始
-		socket.on("connect", () => {
-			socket.on("userlist", userlist => {
-				let peoplelist = userlist;
-			});
-			socket.on("socketid notice", id => {
-				mySocketId = id;
-			});
-		})
-		//message送信
-		send.addEventListener("click", e => {
+let mySocketId;
+	let msg = document.getElementById("chatarea");
+	let msgList = document.getElementById("msgList");
+	let send = document.getElementById("send");
+	let popupBtn = document.getElementById("popup_btn");
+	let popup = document.getElementById("popup");
+	let user = window.prompt("ユーザー名を入力してください", "");
+	
+	socket.emit("username", user);//動作確認してない
+	//接続開始
+	socket.on("connect", () => {
+		socket.on("userlist", userlist => {
+			let peoplelist = userlist;
+		});
+		socket.on("socketid notice", id => {
+			mySocketId = id;
+		});
+	})
+	//message送信
+	send.addEventListener("click", e => {
+		if(msg.value != ""){
+			socket.emit("chat message", msg.value);
+			console.log({ text: msg.value });
+			console.log(msg.value);
+			msg.value = "";
+		}
+	});
+	//enterで送信
+	msg.addEventListener("keypress", e => {
+		if(e.keyCode == "13"){
 			if(msg.value != ""){
 				socket.emit("chat message", msg.value);
 				console.log({ text: msg.value });
 				console.log(msg.value);
 				msg.value = "";
 			}
-		});
-		//enterで送信
-		msg.addEventListener("keypress", e => {
-			if(e.keyCode == "13"){
-				if(msg.value != ""){
-					socket.emit("chat message", msg.value);
-					console.log({ text: msg.value });
-					console.log(msg.value);
-					msg.value = "";
-				}
-			}
-		});
-		//新規レイヤー割り当て
-		socket.on("layer notice", layernum => {
-			n_layer.value = layernum + 1;
-		})
-		//message送信
-		socket.on("chat message", data => {
-			let li = document.createElement('li');// liタグ作成
-			li.innerText = data; // liタグに値を入れる
-			msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
-		});
-		//レイヤー変更時
-		socket.on("layer changed", layerlst => {
-			layer_used = layerlst;
-		});
-		//ユーザー入室時
-		socket.on("username", name => {
-			let liname = document.createElement('li');
-			liname.innerText = name + 'さんが入室しました';
-			msgList.appendChild(liname);
-		});
-		//ユーザー退室時
-		socket.on("exit user", name => {
-			let liexit = document.createElement('li');
-			liexit.innerText = name + 'さんが退室しました';
-			msgList.appendChild(liexit);
-		})
-	};
+		}
+	});
+	//新規レイヤー割り当て
+	socket.on("layer notice", layernum => {
+		n_layer.value = layernum + 1;
+	})
+	//message送信
+	socket.on("chat message", data => {
+		let li = document.createElement('li');// liタグ作成
+		li.innerText = data; // liタグに値を入れる
+		msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
+	});
+	//レイヤー変更時
+	socket.on("layer changed", layerlst => {
+		layer_used = layerlst;
+	});
+	//ユーザー入室時
+	socket.on("username", name => {
+		let liname = document.createElement('li');
+		liname.innerText = name + 'さんが入室しました';
+		msgList.appendChild(liname);
+	});
+	//ユーザー退室時
+	socket.on("exit user", name => {
+		let liexit = document.createElement('li');
+		liexit.innerText = name + 'さんが退室しました';
+		msgList.appendChild(liexit);
+	})
+
 	//chatここまで
 
 		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
