@@ -170,6 +170,7 @@
 		socket.emit(name, JSON.stringify(data));
 	};
 
+	let mySocketId;
 	window.onload = function () {
 		//chat
 		//			var form = document.getElementById("textarea");
@@ -187,7 +188,6 @@
 			};
 			*/
 		let user = window.prompt("ユーザー名を入力してください", "");
-		let mySocketId;
 		//if(user == NULL) location.href="/public/inde.html";
 		socket.emit("username", user);//動作確認してない
 
@@ -319,7 +319,8 @@
 					canvas.style.display = "inline";
 					canvas.style.zIndex = "10";
 				} else {
-					n_layer.value = mySocketId;
+					console.log(mySocketId);
+					n_layer.value = layer_used.indexOf(mySocketId) + 1;
 				}
 /*
 				console.log(Number(e.target.value));

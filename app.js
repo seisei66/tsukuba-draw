@@ -162,7 +162,7 @@ io.sockets.on('connect', socket => {
   socket.on('disconnect', function(){
     io.emit('exit user', people[socket.id]);
     delete people[socket.id];
-    layerlst[socket.id] = null;
+    layerlst[socket.id] = void 0;
     io.emit('layer changed', layerlst);
   });
 
@@ -173,7 +173,7 @@ io.sockets.on('connect', socket => {
 
   //描画レイヤー変更時
   socket.on('layer changed', layernum => {
-    layerlst[layerlst.indexOf(socket.id)] = null;
+    layerlst[layerlst.indexOf(socket.id)] = void 0;
     layerlst[layernum] = socket.id;
     io.emit('layer changed', layerlst);
     console.log(layerlst);
