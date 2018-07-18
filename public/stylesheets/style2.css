@@ -79,84 +79,78 @@ input   {
   grid-area: main;
   margin: auto;
 ｝
+button {
+             display: inline-block;
+             padding: 0.3em 1em;
+             text-decoration: none;
+             color: #67c5ff;
+             border: solid 2px #67c5ff;
+             border-radius: 3px;
+             transition: .4s;
+         }
+
+button:hover {
+             background: #67c5ff;
+             color: white;
+         }
 #layer canvas {
-		border: solid 1px black;
-		position: absolute;
+	border: solid 1px black;
+	position: absolute;
 	}
 #layer {
-		position: relative;
+	position: relative;
 	}
 #sum canvas {
-		border: solid 1px black;
-		position: absolute;
+	border: solid 1px black;
+	position: absolute;
 	}
 #sum {
-		position: relative;
+	position: relative;
 	}
 #canvas1,
 #s_canvas1 {
-		z-index: 0;
+	z-index: 0;
 	}
 #canvas2,
 #s_canvas2 {
-		z-index: 1;
+	z-index: 1;
 	}
 #canvas3,
 #s_canvas3 {
-		z-index: 2;
+	z-index: 2;
 	}
 #canvas4,
 #s_canvas4 {
-		z-index: 3;
+	z-index: 3;
 	}
 #canvas5,
 #s_canvas5 {
-		z-index: 4;
+	z-index: 4;
 	}
 #canvas6,
 #s_canvas6 {
-		z-index: 5;
+	z-index: 5;
 	}
 #canvas7,
 #s_canvas7 {
-		z-index: 6;
+	z-index: 6;
 	}
 #canvas8,
 #s_canvas8 {
-		z-index: 7;
+	z-index: 7;
 	}
 #canvas9,
 #s_canvas9 {
-		z-index: 8;
+	z-index: 8;
 	}
 #canvas10,
 #s_canvas10 {
-		z-index: 9;
+	z-index: 9;
 	}
 
 #chat{
   grid-area: side2;
   background-color: #f0f0f0;
 }
-
-#send {
-        height: 40px;
-        color: #fcffdb;
-        background-color: #aaaaff;
-        text-decoration-color: #903bd6;
-        border: 0;
-}
-#log ul {
-        margin: 0;
-        padding: 0;
-}
-#log li {
-        display: block;
-        text-decoration: none;
-        list-style: none;
-        padding: 5px 10px;
-        background-color: #ddddff;
-}
-
 
 
