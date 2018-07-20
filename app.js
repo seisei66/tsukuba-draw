@@ -166,10 +166,10 @@ io.sockets.on('connect', socket => {
     io.emit('layer changed', layerlst);
   });
 
-  //描画データ送信
-  socket.on('pixel data', pixel_data => {
-    io.emit('pixel data', JSON.stringify({layer:layerlst.indexOf(socket.id), data:pixel_data}));
-  });
+
+//  socket.on('pixel data', pixel_data => {
+//    io.emit('pixel data', JSON.stringify({layer:layerlst.indexOf(socket.id), data:pixel_data}));
+//  });
 
   //描画レイヤー変更時
   socket.on('layer changed', layernum => {
@@ -178,6 +178,13 @@ io.sockets.on('connect', socket => {
     io.emit('layer changed', layerlst);
     console.log(layerlst);
   });
+
+  //描画データ受信　送信者以外に送信
+  socket.on('pixel data', pixeldata => {
+    console.log(pixeldata);
+    let pixelset = JSON.stringify({pixel_data:pixeldata, num:layerlst.indexOf(socket.id)+1})//layerとjsonにする
+    socket.broadcast.emit('pixel data', pixelset);
+  })
 });
 /*
 function io(server) {
