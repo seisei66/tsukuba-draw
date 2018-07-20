@@ -91,6 +91,7 @@
 		};
 
 		let mySocketId;
+		let layer_used = new Array(10);
 		window.onload = () => {
 			let msg = document.getElementById("chatarea");
 			let msgList = document.getElementById("msgList");
@@ -141,6 +142,8 @@
 			//レイヤー変更時
 			socket.on("layer changed", layerlst => {
 				layer_used = layerlst;
+				let mylayer = layer_used.indexOf(mySocketId);
+				buttonClassChange(layer_used);
 			});
 			//ユーザー入室時
 			socket.on("username", name => {
@@ -185,7 +188,6 @@
 		let reset_f = false;
 		let buffx = [];
 		let buffy = [];
-		let layer_used = new Array(10);
 		let last = 0;
 		let _last = 0;
 		let last_undo = -1;
@@ -240,31 +242,52 @@
 			}
 		});
 			*/
-		layerbtn1 = document.getElementById("layerbtn1");
-		layerbtn2 = document.getElementById("layerbtn2");
-		layerbtn3 = document.getElementById("layerbtn3");
-		layerbtn4 = document.getElementById("layerbtn4");
-		layerbtn5 = document.getElementById("layerbtn5");
-		layerbtn6 = document.getElementById("layerbtn6");
-		layerbtn7 = document.getElementById("layerbtn7");
-		layerbtn8 = document.getElementById("layerbtn8");
-		layerbtn9 = document.getElementById("layerbtn9");
-		layerbtn10 = document.getElementById("layerbtn10");
+		layerbtn = new Array(10);
+		layerbtn[0] = document.getElementById("layerbtn1");
+		layerbtn[1] = document.getElementById("layerbtn2");
+		layerbtn[2] = document.getElementById("layerbtn3");
+		layerbtn[3] = document.getElementById("layerbtn4");
+		layerbtn[4] = document.getElementById("layerbtn5");
+		layerbtn[5] = document.getElementById("layerbtn6");
+		layerbtn[6] = document.getElementById("layerbtn7");
+		layerbtn[7] = document.getElementById("layerbtn8");
+		layerbtn[8] = document.getElementById("layerbtn9");
+		layerbtn[9] = document.getElementById("layerbtn10");
 
+		for (let i=0; i<10; i++) {
+			layerbtn[i].addEventListener("click", function (e) {
+				console.log(i + "押せた");
+				layerchange(i+1);
+			});
+		}
 
-		layerbtn1.addEventListener("click", function (e) {
+		function buttonClassChange(lArray) {
+			let mylayer = lArray.indexOf(mySocketId);
+			for (let i=0; i<10; i++) {
+				if(!lArray[i]){
+					layerbtn[i].className = "empty-layer";
+				} else if  (i == mylayer) {
+					layerbtn[i].className = "my-layer";
+				} else {
+					layerbtn[i].className = "used-layer";
+				}
+			}
+		}
+		/*
+		layerbtn[0].addEventListener("click", function (e) {
+			console.log("押せた");
 			layerchange(1);
 		});
-		layerbtn2.addEventListener("click", function (e) {
+		layerbtn[1].addEventListener("click", function (e) {
 			layerchange(2);
 		});
-		layerbtn3.addEventListener("click", function (e) {
+		layerbtn[2].addEventListener("click", function (e) {
 			layerchange(3);
 		});
-		layerbtn4.addEventListener("click", function (e) {
+		layerbtn[3].addEventListener("click", function (e) {
 			layerchange(4);
 		});
-		layerbtn5.addEventListener("click", function (e) {
+		layerbtn[4].addEventListener("click", function (e) {
 			layerchange(5);
 		});
 		layerbtn6.addEventListener("click", function (e) {
@@ -282,6 +305,9 @@
 		layerbtn10.addEventListener("click", function (e) {
 			layerchange(10);
 		});
+
+		*/
+
 
 		function layerchange(number) {
 			console.log("layerchange");
