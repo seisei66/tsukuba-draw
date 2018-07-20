@@ -1,7 +1,7 @@
 @charset "UTF-8";
 body  {
        display: -ms-grid;
-　     -ms-grid-columns: 3fr 600px 2fr;
+　     -ms-grid-columns: 3fr 1fr 600px 2fr;
        -ms-grid-rows:1fr 600px 600px;
      }
 .site {
@@ -19,24 +19,27 @@ body  {
   width: 300px;
   height: 300px;
 }
+.layerbtn{
+  -ms-grid-column:2;
+  -ms-grid-row:2;
+}
 #layer {
-      -ms-grid-column:2;
+      -ms-grid-column:3;
       -ms-grid-row:2;
       margin:auto;
 }
 #chat{
-  -ms-grid-column:3;
+  -ms-grid-column:4;
   -ms-grid-row:2;
   background-color: #f0f0f0;
-}
-
-
+//*IE用ここまで*//
+//*モダンここから*//
 body  {display: grid;
       grid-template-areas:
-                "head head head"
-                "side1 main side2"
-                "foot foot foot";
-      grid-template-columns: 3fr 600px 2fr;
+                "head head head head"
+                "side1 side2 main side3"
+                "foot foot foot foot";
+      grid-template-columns: 3fr 1fr 602px 2fr;
       grid-template-rows: 1fr 600px 600px;
        margin: 0;
        font-family: 'Source Sans Pro', 'メイリオ',
@@ -90,16 +93,18 @@ button:hover {
              background: #67c5ff;
              color: white;
          }
-.layer canvas{
+.layer {
   grid-area: main;
-  margin: auto;
+  position: relative;
 }
-#layer canvas {
+.layer canvas {
   border: solid 1px black;
   position: absolute;
+  top: -300px;
+  left: -300px;
 }
-#layer {
-  position: relative;
+.layerbtn{
+  grid-area: side2;
 }
 #sum canvas {
   border: solid 1px black;
@@ -149,6 +154,6 @@ button:hover {
   z-index: 9;
 }
 #chat{
-  grid-area: side2;
+  grid-area: side3;
   background-color: #f0f0f0;
 }
