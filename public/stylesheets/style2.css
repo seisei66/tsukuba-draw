@@ -32,8 +32,10 @@ body  {
   -ms-grid-column:4;
   -ms-grid-row:2;
   background-color: #f0f0f0;
-//*IE用ここまで*//
-//*モダンここから*//
+}
+/*IE用ここまで*/
+/*モダンここから*/
+
 body  {display: grid;
       grid-template-areas:
                 "head head head head"
@@ -52,11 +54,11 @@ body  {display: grid;
        padding: 0;
        text-align: center}
 
-.site p  {color: #ffffff;
-          font-size: 40px;
-          margin: 0;
-          font-family: 'Paytone One', sans-serif;
-          text-decoration: none;}
+.site p  {  color: #ffffff;
+            font-size: 40px;
+            margin: 0;
+            font-family: 'Paytone One', sans-serif;
+            text-decoration: none;}
 
 .site div { width: 40px;
             height: 40px;
@@ -65,46 +67,71 @@ body  {display: grid;
             background: white;}
 
 .colors  {
-        grid-area: side1;
-        padding: 20px 0;
-        background-color: #ffffff;
-        width: auto;
+            grid-area: side1;
+            padding: 20px 0;
+            background-color: #ffffff;
+            width: auto;
       }
 
 input   {
-         list-style: none;
-         margin-bottom: 15px;
-         padding: 5px;
-         color: #000000;
-         font-size: 14px;
-         text-decoration: none;
-         list-style: none;}
+            list-style: none;
+            margin-bottom: 15px;
+            padding: 5px;
+            color: #000000;
+            font-size: 14px;
+            text-decoration: none;
+            list-style: none;
+       }
 button {
-             display: inline-block;
-             padding: 0.3em 1em;
-             text-decoration: none;
-             color: #67c5ff;
-             border: solid 2px #67c5ff;
-             border-radius: 3px;
-             transition: .4s;
+            display: inline-block;
+            padding: 0.3em 1em;
+            margin-bottom: 3px;
+            text-decoration: none;
+            color: #67c5ff;
+            border: solid 2px #67c5ff;
+            border-radius: 3px;
+            transition: .4s;
          }
 
 button:hover {
-             background: #67c5ff;
-             color: white;
+            background: #67c5ff;
+            color: white;
          }
 .layer {
-  grid-area: main;
-  position: relative;
+            grid-area: main;
+            position: relative;
 }
 .layer canvas {
-  border: solid 1px black;
-  position: absolute;
-  top: -300px;
-  left: -300px;
+            border: solid 1px black;
+            position: absolute;
+            top: -300px;
+            left: -300px;
 }
-.layerbtn{
-  grid-area: side2;
+.layerbtn button{
+            display: block;
+            grid-area: side2;
+}
+
+button.my-layer {
+            background: #67c5ff;
+            color: white;
+}
+button.my-layer:hover {
+            background: #67c5ff;
+            color: white;
+}
+button.empty-layer {
+
+}
+button.used-layer {
+            background: #ffe30e;
+            border: solid 2px #ffe30e;
+            color: white;
+}
+#msgList {
+            text-decoration: none;
+            list-style: none;
+            padding-left: 10px;
 }
 #sum canvas {
   border: solid 1px black;

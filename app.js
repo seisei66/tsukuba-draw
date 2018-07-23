@@ -160,6 +160,7 @@ io.sockets.on('connect', socket => {
 
   //ユーザー退室時
   socket.on('disconnect', function(){
+    console.log(socket.id) ;
     io.emit('exit user', people[socket.id]);
     delete people[socket.id];
     layerlst[layerlst.indexOf(socket.id)] = void 0;
@@ -179,7 +180,7 @@ io.sockets.on('connect', socket => {
     console.log(layerlst);
   });
 
-  //描画データ受信　送信者以外に送信
+  //描画データ受信　
   socket.on('pixel data', pixeldata => {
     console.log(pixeldata);
     let pixelset = JSON.stringify({pixel_data:pixeldata, num:layerlst.indexOf(socket.id)+1})//layerとjsonにする
