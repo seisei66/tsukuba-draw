@@ -53,7 +53,9 @@
 		<p>
 			<input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
 			</input>
-			<input id="n_layer" type="number" max=10 min=1 value=1>layer</input>
+			<!--以下のinput要素は非表示-->
+			<input id="n_layer" type="number" max=10 min=1 value=1><!--layer--></input>
+			<br>
 			<button id="reset" type="button">リセット</button>
 			<button id="undo" type="button">undo</button>
 			<button id="eraser" type="button">消しゴム</button>
@@ -100,6 +102,9 @@
 			let popupBtn = document.getElementById("popup_btn");
 			let popup = document.getElementById("popup");
 			let user = window.prompt("ユーザー名を入力してください", "");
+			if (!user) {
+				location.href = "/public/index.html";
+			}
 			socket.emit("username", user);//動作確認してない
 			//接続開始
 			socket.on("connect", () => {
@@ -257,7 +262,6 @@
 
 		for (let i=0; i<10; i++) {
 			layerbtn[i].addEventListener("click", function (e) {
-				console.log(i + "押せた");
 				layerchange(i+1);
 			});
 		}
@@ -274,44 +278,9 @@
 				}
 			}
 		}
-		/*
-		layerbtn[0].addEventListener("click", function (e) {
-			console.log("押せた");
-			layerchange(1);
-		});
-		layerbtn[1].addEventListener("click", function (e) {
-			layerchange(2);
-		});
-		layerbtn[2].addEventListener("click", function (e) {
-			layerchange(3);
-		});
-		layerbtn[3].addEventListener("click", function (e) {
-			layerchange(4);
-		});
-		layerbtn[4].addEventListener("click", function (e) {
-			layerchange(5);
-		});
-		layerbtn6.addEventListener("click", function (e) {
-			layerchange(6);
-		});
-		layerbtn7.addEventListener("click", function (e) {
-			layerchange(7);
-		});
-		layerbtn8.addEventListener("click", function (e) {
-			layerchange(8);
-		});
-		layerbtn9.addEventListener("click", function (e) {
-			layerchange(9);
-		});
-		layerbtn10.addEventListener("click", function (e) {
-			layerchange(10);
-		});
-
-		*/
-
 
 		function layerchange(number) {
-			console.log("layerchange");
+			//console.log("layerchange");
 			if (!layer_used[number - 1]) {
 				socket.emit("layer changed", number - 1);
 				canvas.style.display = "none";

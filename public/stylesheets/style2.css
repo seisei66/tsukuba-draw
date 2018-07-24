@@ -91,6 +91,7 @@ button {
             border: solid 2px #67c5ff;
             border-radius: 3px;
             transition: .4s;
+            height: 28px;
          }
 
 button:hover {
@@ -110,6 +111,8 @@ button:hover {
 .layerbtn button{
             display: block;
             grid-area: side2;
+            width: 75px;
+            height: 25px;
 }
 
 button.my-layer {
@@ -133,6 +136,17 @@ button.used-layer {
             list-style: none;
             padding-left: 10px;
 }
+.colors button {
+            width: 92px;
+}
+button#reset ,button#undo ,button#eraser {
+            width: 70px;
+}
+
+#n_layer {
+            display: none;
+}
+
 #sum canvas {
   border: solid 1px black;
   position: absolute;

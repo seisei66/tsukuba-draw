@@ -136,8 +136,8 @@ io.sockets.on('connect', socket => {
     let i;
     for(key in people){
       userlist.push(people[key]);
-      console.log(people);
-      console.log(userlist);
+      //console.log(people);
+      //console.log(userlist);
     }
     for(i=0; i<10; i++){
       if(!layerlst[i]) {
@@ -147,20 +147,20 @@ io.sockets.on('connect', socket => {
     }
     io.to(socket.id).emit('layer notice', i)
     io.emit('layer changed', layerlst);
-    console.log(layerlst);
+    //console.log(layerlst);
     io.emit('username', username);
     io.emit('userlist', userlist);//empty考える
   });
 
   // チャット内容にユーザ名を追加し全接続先へ送信
   socket.on('chat message', message => {
-    console.log(people[socket.id] + ' : ' + message);
+    //console.log(people[socket.id] + ' : ' + message);
     io.emit('chat message', people[socket.id] + ' : ' + message);
   });
 
   //ユーザー退室時
   socket.on('disconnect', function(){
-    console.log(socket.id) ;
+    //console.log(socket.id) ;
     io.emit('exit user', people[socket.id]);
     delete people[socket.id];
     layerlst[layerlst.indexOf(socket.id)] = void 0;
@@ -177,12 +177,12 @@ io.sockets.on('connect', socket => {
     layerlst[layerlst.indexOf(socket.id)] = void 0;
     layerlst[layernum] = socket.id;
     io.emit('layer changed', layerlst);
-    console.log(layerlst);
+    //console.log(layerlst);
   });
 
   //描画データ受信　
   socket.on('pixel data', pixeldata => {
-    console.log(pixeldata);
+    //console.log(pixeldata);
     let pixelset = JSON.stringify({pixel_data:pixeldata, num:layerlst.indexOf(socket.id)+1})//layerとjsonにする
     socket.broadcast.emit('pixel data', pixelset);
   })
