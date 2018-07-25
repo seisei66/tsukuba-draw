@@ -453,6 +453,7 @@
 			af_pix = e.data.af_pix;
 			if (multi)
 				setTimeout("get_pix()", 200);
+			socket.emit("canvas data", ctx.getImageData(0, 0, canvas.width, canvas.height));
 		}
 
 
