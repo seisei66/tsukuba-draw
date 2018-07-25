@@ -1,7 +1,7 @@
 @charset "UTF-8";
 body  {
        display: -ms-grid;
-　     -ms-grid-columns: 2fr 1fr 600px 2fr;
+       -ms-grid-columns:2fr 1fr 600px 2fr;
        -ms-grid-rows:1fr 600px 10px;
      }
 .site {
