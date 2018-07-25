@@ -139,9 +139,6 @@ button.used-layer {
 .colors button {
             width: 92px;
 }
-button#reset ,button#undo ,button#eraser {
-            width: 70px;
-}
 
 #n_layer {
             display: none;
