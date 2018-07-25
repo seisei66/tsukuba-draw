@@ -117,8 +117,8 @@
 			send.addEventListener("click", function (e) {
 				if (msg.value != "") {
 					socket.emit("chat message", msg.value);
-					console.log({ text: msg.value });
-					console.log(msg.value);
+					//console.log({ text: msg.value });
+					//console.log(msg.value);
 					msg.value = "";
 				}
 			});
@@ -127,8 +127,8 @@
 				if (e.keyCode == "13") {
 					if (msg.value != "") {
 						socket.emit("chat message", msg.value);
-						console.log({ text: msg.value });
-						console.log(msg.value);
+						//console.log({ text: msg.value });
+						//console.log(msg.value);
 						msg.value = "";
 					}
 				}
@@ -164,14 +164,33 @@
 
 			socket.on("pixel data", function (pixelset) {
 				pixelset = JSON.parse(pixelset);
-				console.log(pixelset, pixelset.pixel_data, pixelset.num);
+				//console.log(pixelset, pixelset.pixel_data, pixelset.num);
 				pix_conv(pixelset.pixel_data, pixelset.num);
 			})
 		};
 		//chatここまで
-
-		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
-		let s_layers = [document.getElementById("s_canvas1"), document.getElementById("s_canvas2"), document.getElementById("s_canvas3"), document.getElementById("s_canvas4"), document.getElementById("s_canvas5"), document.getElementById("s_canvas6"), document.getElementById("s_canvas7"), document.getElementById("s_canvas8"), document.getElementById("s_canvas9"), document.getElementById("s_canvas10")];
+		let layers = new Array(10);
+		layers[0] = document.getElementById("canvas1");
+		layers[1] = document.getElementById("canvas2");
+		layers[2] = document.getElementById("canvas3");
+		layers[3] = document.getElementById("canvas4");
+		layers[4] = document.getElementById("canvas5");
+		layers[5] = document.getElementById("canvas6");
+		layers[6] = document.getElementById("canvas7");
+		layers[7] = document.getElementById("canvas8");
+		layers[8] = document.getElementById("canvas9");
+		layers[9] = document.getElementById("canvas10");
+		let s_layers = new Array(10);
+		s_layers[0] = document.getElementById("s_canvas1");
+		s_layers[1] = document.getElementById("s_canvas2");
+		s_layers[2] = document.getElementById("s_canvas3");
+		s_layers[3] = document.getElementById("s_canvas4");
+		s_layers[4] = document.getElementById("s_canvas5");
+		s_layers[5] = document.getElementById("s_canvas6");
+		s_layers[6] = document.getElementById("s_canvas7");
+		s_layers[7] = document.getElementById("s_canvas8");
+		s_layers[8] = document.getElementById("s_canvas9");
+		s_layers[9] = document.getElementById("s_canvas10");
 		let canvas = layers[0];
 		let ctx = layers[0].getContext("2d");
 		canvas.style.display = "inline";
@@ -277,11 +296,43 @@
 		layerbtn[8] = document.getElementById("layerbtn9");
 		layerbtn[9] = document.getElementById("layerbtn10");
 
-		for (let i = 0; i < 10; i++) {
-			layerbtn[i].addEventListener("click", function (e) {
-				layerchange(i + 1);
-			});
-		}
+		// for (let i = 0; i < 10; i++) {
+		// 	layerbtn[i].addEventListener("click", function (e) {
+		// 		layerchange(i + 1);
+		// 	});
+		// }
+
+		layerbtn[0].addEventListener("click", function (e) {
+			layerchange(1);
+		});
+		layerbtn[1].addEventListener("click", function (e) {
+			layerchange(2);
+		});
+		layerbtn[2].addEventListener("click", function (e) {
+			layerchange(3);
+		});
+		layerbtn[3].addEventListener("click", function (e) {
+			layerchange(4);
+		});
+		layerbtn[4].addEventListener("click", function (e) {
+			layerchange(5);
+		});
+		layerbtn[5].addEventListener("click", function (e) {
+			layerchange(6);
+		});
+		layerbtn[6].addEventListener("click", function (e) {
+			layerchange(7);
+		});
+		layerbtn[7].addEventListener("click", function (e) {
+			layerchange(8);
+		});
+		layerbtn[8].addEventListener("click", function (e) {
+			layerchange(9);
+		});
+		layerbtn[9].addEventListener("click", function (e) {
+			layerchange(10);
+		});
+
 
 		function buttonClassChange(lArray) {
 			let mylayer = lArray.indexOf(mySocketId);
