@@ -236,7 +236,6 @@
 				let a = document.createElement("a");
 				a.download = "echaco.png";
 				a.href = URL.createObjectURL(blob);
-				console.log(a.href);
 				a.target = '_blank';
 				a.click();
 				URL.revokeObjectURL(blob);
