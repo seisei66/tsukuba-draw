@@ -113,7 +113,7 @@ button:hover {
 .layerbtn button{
             display: block;
             grid-area: side2;
-            width: 75px;
+            width: 85px;
             height: 25px;
 }
 
