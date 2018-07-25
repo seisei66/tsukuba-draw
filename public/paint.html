@@ -93,7 +93,7 @@
 
 		let mySocketId;
 		let layer_used = new Array(10);
-		window.onload = () => {
+		window.onload = function () {
 			let msg = document.getElementById("chatarea");
 			let msgList = document.getElementById("msgList");
 			let send = document.getElementById("send");
@@ -105,16 +105,16 @@
 			}
 			socket.emit("username", user);//動作確認してない
 			//接続開始
-			socket.on("connect", () => {
-				socket.on("userlist", userlist => {
+			socket.on("connect", function () {
+				socket.on("userlist", function (userlist) {
 					let peoplelist = userlist;
 				});
-				socket.on("socketid notice", id => {
+				socket.on("socketid notice", function (id) {
 					mySocketId = id;
 				});
 			})
 			//message送信
-			send.addEventListener("click", e => {
+			send.addEventListener("click", function (e) {
 				if (msg.value != "") {
 					socket.emit("chat message", msg.value);
 					console.log({ text: msg.value });
@@ -123,7 +123,7 @@
 				}
 			});
 			//enterで送信
-			msg.addEventListener("keypress", e => {
+			msg.addEventListener("keypress", function (e) {
 				if (e.keyCode == "13") {
 					if (msg.value != "") {
 						socket.emit("chat message", msg.value);
@@ -134,35 +134,35 @@
 				}
 			});
 			//新規レイヤー割り当て
-			socket.on("layer notice", layernum => {
+			socket.on("layer notice", function (layernum) {
 				n_layer.value = layernum + 1;
 			})
 			//message送信
-			socket.on("chat message", data => {
+			socket.on("chat message", function (data) {
 				let li = document.createElement('li');// liタグ作成
 				li.innerText = data; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
 			});
 			//レイヤー変更時
-			socket.on("layer changed", layerlst => {
+			socket.on("layer changed", function (layerlst) {
 				layer_used = layerlst;
 				let mylayer = layer_used.indexOf(mySocketId);
 				buttonClassChange(layer_used);
 			});
 			//ユーザー入室時
-			socket.on("username", name => {
+			socket.on("username", function (name) {
 				let liname = document.createElement('li');
 				liname.innerText = name + 'さんが入室しました';
 				msgList.appendChild(liname);
 			});
 			//ユーザー退室時
-			socket.on("exit user", name => {
+			socket.on("exit user", function (name) {
 				let liexit = document.createElement('li');
 				liexit.innerText = name + 'さんが退室しました';
 				msgList.appendChild(liexit);
 			})
 
-			socket.on("pixel data", pixelset => {
+			socket.on("pixel data", function (pixelset) {
 				pixelset = JSON.parse(pixelset);
 				console.log(pixelset, pixelset.pixel_data, pixelset.num);
 				pix_conv(pixelset.pixel_data, pixelset.num);
