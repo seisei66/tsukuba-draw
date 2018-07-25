@@ -62,6 +62,7 @@
 			<button id="reset" type="button">リセット</button>
 			<!--<button id="undo" type="button">undo</button>-->
 			<button id="eraser" type="button">消しゴム</button>
+			<button id="download" type="button" download="echaco.png">ダウンロード</button>
 			<p>線の太さ
 				<input type="range" min="0" max="100" value="10" id="lineWidth">
 				<span id="lineNum">10</span>
@@ -187,6 +188,8 @@
 		let n_layer = document.getElementById("n_layer");
 		let pre_layer = "0";
 
+		let dl = document.getElementById("download");
+
 		let pixel_data = [];
 		let bef_pix;
 		let af_pix;
@@ -226,6 +229,24 @@
 				e.target.innerHTML = "消しゴム";
 			}
 			pen = !pen;
+		});
+
+		dl.addEventListener("pointerdown", function (e) {
+			let dl_canvas = document.createElement("canvas").getContext("2d");
+			dl_canvas.canvas.width = 600;
+			dl_canvas.canvas.height = 600;
+			for (let i = 0; i < 10; i++) {
+				dl_canvas.drawImage(s_layers[i], 0, 0);
+			}
+			dl_canvas.canvas.toBlob(function (blob) {
+				let a = document.createElement("a");
+				a.download = "echaco.png";
+				a.href = URL.createObjectURL(blob);
+				console.log(a.href);
+				a.target = '_blank';
+				a.click();
+				URL.revokeObjectURL(blob);
+			}, "image/png");
 		});
 
 		/*
