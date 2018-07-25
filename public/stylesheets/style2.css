@@ -1,23 +1,22 @@
 @charset "UTF-8";
 body  {
        display: -ms-grid;
-　     -ms-grid-columns: 3fr 1fr 600px 2fr;
-       -ms-grid-rows:1fr 600px 600px;
+　     -ms-grid-columns: 2fr 1fr 600px 2fr;
+       -ms-grid-rows:1fr 600px 10px;
      }
 .site {
        -ms-grid-column:1;
-	     -ms-grid-column-span:3;
+	     -ms-grid-column-span:4;
 	     -ms-grid-row: 1;
        }
 .colors {
       -ms-grid-column:1;
       -ms-grid-row:2;
-      width: auto;
-    }
+        }
 .colors canvas{
   margin-left: 10px;
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
 }
 .layerbtn{
   -ms-grid-column:2;
