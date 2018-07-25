@@ -49,7 +49,7 @@ body  {display: grid;
 
 .site  {
        grid-area: head;
-       background-color: #cf6766;
+       background-color: #67c5ff;
        padding: 0;
        text-align: center}
 
