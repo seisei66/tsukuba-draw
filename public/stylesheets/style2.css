@@ -1,8 +1,8 @@
 @charset "UTF-8";
 body  {
        display: -ms-grid;
-       -ms-grid-columns:2fr 1fr 600px 2fr;
-       -ms-grid-rows:1fr 600px 10px;
+       -ms-grid-columns:2fr 1fr 602px 2fr;
+       -ms-grid-rows:1fr 602px 10px;
      }
 .site {
        -ms-grid-column:1;
@@ -107,7 +107,7 @@ button:hover {
   }
 }
 .layer canvas {
-            border: solid 1px black;
+            border: solid 2px #67c5ff;
             position: absolute;
 }
 .layerbtn button{
@@ -147,7 +147,7 @@ button.used-layer {
 }
 
 #sum canvas {
-  border: solid 1px black;
+  border: solid 2px #67c5ff;
   position: absolute;
 }
 #sum {
