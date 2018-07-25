@@ -41,7 +41,7 @@ body  {display: grid;
                 "side1 side2 main side3"
                 "foot foot foot foot";
       grid-template-columns: 3fr 1fr 602px 2fr;
-      grid-template-rows: 1fr 600px 600px;
+      grid-template-rows: 1fr 600px 10px;
        margin: 0;
        font-family: 'Source Sans Pro', 'メイリオ',
        'Hiragino Kaku Gothic Pro', sans-serif;
@@ -69,7 +69,6 @@ body  {display: grid;
             grid-area: side1;
             padding: 20px 0;
             background-color: #ffffff;
-            width: auto;
       }
 
 input   {
