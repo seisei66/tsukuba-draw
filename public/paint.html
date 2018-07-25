@@ -55,7 +55,9 @@
 			<input id="foo" class="jscolor {onFineChange:'update(this)'}" value="cc4499">
 			</input>
 			<!--以下のinput要素は非表示-->
-			<input id="n_layer" type="number" max=10 min=1 value=1><!--layer--></input>
+			<input id="n_layer" type="number" max=10 min=1 value=1>
+			<!--layer-->
+			</input>
 			<br>
 			<button id="reset" type="button">リセット</button>
 			<!--<button id="undo" type="button">undo</button>-->
@@ -214,7 +216,7 @@
 		reset.addEventListener("pointerdown", function (e) {
 			f_reset = true;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			setTimeout("get_pix()", 200);
+			get_pix();
 		});
 
 		eraser.addEventListener("pointerdown", function (e) {
@@ -261,18 +263,18 @@
 		layerbtn[8] = document.getElementById("layerbtn9");
 		layerbtn[9] = document.getElementById("layerbtn10");
 
-		for (let i=0; i<10; i++) {
+		for (let i = 0; i < 10; i++) {
 			layerbtn[i].addEventListener("click", function (e) {
-				layerchange(i+1);
+				layerchange(i + 1);
 			});
 		}
 
 		function buttonClassChange(lArray) {
 			let mylayer = lArray.indexOf(mySocketId);
-			for (let i=0; i<10; i++) {
-				if(!lArray[i]){
+			for (let i = 0; i < 10; i++) {
+				if (!lArray[i]) {
 					layerbtn[i].className = "empty-layer";
-				} else if  (i == mylayer) {
+				} else if (i == mylayer) {
 					layerbtn[i].className = "my-layer";
 				} else {
 					layerbtn[i].className = "used-layer";
@@ -430,14 +432,13 @@
 
 		function get_pix() {
 			multi = true;
-			if (draw_f || f_reset) {
-				f_reset = false;
-				af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
-				let wid = canvas.width;
-				let hei = canvas.height;
-				let pix = { bef_pix: bef_pix, af_pix: af_pix, wid: wid, hei: hei };
-				myWorker.postMessage(pix);
-			} else {
+			f_reset = false;
+			af_pix = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			let wid = canvas.width;
+			let hei = canvas.height;
+			let pix = { bef_pix: bef_pix, af_pix: af_pix, wid: wid, hei: hei };
+			myWorker.postMessage(pix);
+			if (!draw_f) {
 				multi = false;
 			}
 			sum(Number(n_layer.value));
@@ -450,7 +451,8 @@
 			pixel_data = e.data.pixel_data;
 			bef_pix = e.data.bef_pix;
 			af_pix = e.data.af_pix;
-			setTimeout("get_pix()", 200);
+			if (multi)
+				setTimeout("get_pix()", 200);
 		}
 
 
@@ -479,6 +481,7 @@
 
 		function apply(pixels, num) {
 			layers[num - 1].getContext('2d').putImageData(pixels, 0, 0);
+			layers[num - 1].style.display = "none";
 		}
 	</script>
 
