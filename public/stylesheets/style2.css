@@ -130,8 +130,8 @@ button.empty-layer {
 }
 button.used-layer {
             background: #FFFF00;
-            border: solid 2px #FFFF00;
-            color: white;
+            border: solid 2px #67c5ff;
+            color: #67c5ff;
 }
 #msgList {
             text-decoration: none;
