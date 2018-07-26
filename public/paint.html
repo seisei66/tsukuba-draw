@@ -46,12 +46,6 @@
 		<canvas id="canvas10" width="600" height="600"></canvas>
 	</div>
 	<div class="colors">
-		<button onclick="document.getElementById('foo').jscolor.show()">
-			Show Picker</button>
-
-		<button onclick="document.getElementById('foo').jscolor.hide()">
-			Hide Picker</button>
-
 		<p>
 			<input id="foo" class="jscolor {onFineChange:'update(this)'}" value="67c5ff">
 			</input>
@@ -63,6 +57,7 @@
 			<button id="reset" type="button">リセット</button>
 			<!--<button id="undo" type="button">undo</button>-->
 			<button id="eraser" type="button">消しゴム</button>
+			<button id="download" type="button" download="echaco.png">ダウンロード</button>
 			<p>線の太さ
 				<input type="range" min="0" max="100" value="10" id="lineWidth">
 				<span id="lineNum">10</span>
@@ -133,24 +128,9 @@
 			socket.emit(name, JSON.stringify(data));
 		};
 
-		//loading
-		/*
-		let loading = document.getElementById("loading");
-		let sendCanvasnum;
-		let pageLoad = function() {
-			let img = new Image();
-			let loadCtx = loading.getContext("2d");
-			img.src = "/public/images/load.png"
-			loading.style.display = "inline";
-			loading.style.zIndex = "20";
-			loadCtx.drawImage(img, 0, 0);
-		}
-		let pageLoadFinish = function() {
-			loading.style.display = "none";
-		}
-		pageLoad();
-		*/
-		window.onload = function() {
+		let mySocketId;
+		let layer_used = new Array(10);
+		window.onload = function () {
 			let msg = document.getElementById("chatarea");
 			let msgList = document.getElementById("msgList");
 			let send = document.getElementById("send");
@@ -161,10 +141,11 @@
 				location.href = "/public/index.html";
 			}
 			//接続開始
-			socket.on("connect", () => {
-				socket.emit("username", user);
-				//自ID取得
-				socket.on("socketid notice", id => {
+			socket.on("connect", function () {
+				socket.on("userlist", function (userlist) {
+					let peoplelist = userlist;
+				});
+				socket.on("socketid notice", function (id) {
 					mySocketId = id;
 				});
 				socket.on("userlist", userlist => {
@@ -173,7 +154,7 @@
 				});
 			})
 			//新規レイヤー割り当て
-			socket.on("layer notice", layernum => {
+			socket.on("layer notice", function(layernum) {
 				//socket.emit("layer changed", layernum);
 				canvas = layers[layernum];
 				ctx = canvas.getContext("2d");
@@ -184,14 +165,14 @@
 			})
 
 			//message送信
-			send.addEventListener("click", e => {
+			send.addEventListener("click", function (e) {
 				if (msg.value != "") {
 					socket.emit("chat message", msg.value);
 					msg.value = "";
 				}
 			});
 			//enterで送信
-			msg.addEventListener("keypress", e => {
+			msg.addEventListener("keypress", function (e) {
 				if (e.keyCode == "13") {
 					if (msg.value != "") {
 						socket.emit("chat message", msg.value);
@@ -199,15 +180,16 @@
 					}
 				}
 			});
+
 			//message受信
-			socket.on("chat message", data => {
+			socket.on("chat message", function (data) {
 				let li = document.createElement('li');// liタグ作成
 				li.innerText = data; // liタグに値を入れる
 				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
 			});
 
 			//レイヤー変更時
-			socket.on("layer changed", layerlst => {
+			socket.on("layer changed", function (layerlst) {
 				layer_used = layerlst;
 				console.log(mySocketId,layer_used, layer_used.indexOf(mySocketId));
 				let mylayer = layer_used.indexOf(mySocketId);
@@ -215,64 +197,99 @@
 			});
 
 			//ユーザー入室時
-			socket.on("username", name => {
+			socket.on("username", function (name) {
 				let liname = document.createElement('li');
 				liname.innerText = name + 'さんが入室しました';
 				msgList.appendChild(liname);
 			});
 			//ユーザー退室時
-			socket.on("exit user", name => {
+			socket.on("exit user", function (name) {
 				let liexit = document.createElement('li');
 				liexit.innerText = name + 'さんが退室しました';
 				msgList.appendChild(liexit);
-			});
-			//pixeldata受信
-			socket.on("pixel data", pixelset => {
+			})
+
+			socket.on("pixel data", function (pixelset) {
 				pixelset = JSON.parse(pixelset);
 				//console.log(pixelset, pixelset.pixel_data, pixelset.num);
-				pix_conv(pixelset.pixel_data, pixelset.num+1);
-			});
-/*
-			socket.on("get canvas data", function(id) {
-				let wid = canvas.width;
-				let hei = canvas.height;
-				socket.emit("canvas data", {img:ctx.getImageData(0, 0, wid, hei), num:n_layer.value - 1, id:id});
-				console.dir(ctx.getImageData(0, 0, wid, hei));
-			});
-			socket.on("clear canvas data", function(id) {
-				let wid = canvas.width;
-				let hei = canvas.height;
-				socket.emit("clear canvas", {img:ctx.getImageData(0, 0, wid, hei), num:n_layer.value - 1, id:id});
-				//console.log("ohoho");
-			});
-			socket.on("send canvas data", function(img) {
-//				console.dir(img);
-				img = JSON.parse(img);
-				let image = new Image();
-				console.dir(image);
-				image.data = Object.keys(img.img)
-				console.dir(image);
-				apply(image, img.num+1);
-				sum(img.num+1);
-			});
-			socket.on("all canvas data", function(img) {
-				//img = JSON.parse(img);
-//				console.log(img);
-				for(let i=0; i<10; i++) {
-					let image = new Image();
-					if(img[i]){
-						image = Object.keys(img)
-						apply(image, i+1);
-						sum(i+1);
-					}
-				}
-
+				pix_conv(pixelset.pixel_data, pixelset.num);
 			})
-*/
-
 		};
+		/*
+					socket.on("get canvas data", function(id) {
+						let wid = canvas.width;
+						let hei = canvas.height;
+						socket.emit("canvas data", {img:ctx.getImageData(0, 0, wid, hei), num:n_layer.value - 1, id:id});
+						console.dir(ctx.getImageData(0, 0, wid, hei));
+					});
+					socket.on("clear canvas data", function(id) {
+						let wid = canvas.width;
+						let hei = canvas.height;
+						socket.emit("clear canvas", {img:ctx.getImageData(0, 0, wid, hei), num:n_layer.value - 1, id:id});
+						//console.log("ohoho");
+					});
+					socket.on("send canvas data", function(img) {
+		//				console.dir(img);
+						img = JSON.parse(img);
+						let image = new Image();
+						console.dir(image);
+						image.data = Object.keys(img.img)
+						console.dir(image);
+						apply(image, img.num+1);
+						sum(img.num+1);
+					});
+					socket.on("all canvas data", function(img) {
+						//img = JSON.parse(img);
+		//				console.log(img);
+						for(let i=0; i<10; i++) {
+							let image = new Image();
+							if(img[i]){
+								image = Object.keys(img)
+								apply(image, i+1);
+								sum(i+1);
+							}
+						}
 
+					})
+		*/
 		//chatここまで
+		let layers = new Array(10);
+		layers[0] = document.getElementById("canvas1");
+		layers[1] = document.getElementById("canvas2");
+		layers[2] = document.getElementById("canvas3");
+		layers[3] = document.getElementById("canvas4");
+		layers[4] = document.getElementById("canvas5");
+		layers[5] = document.getElementById("canvas6");
+		layers[6] = document.getElementById("canvas7");
+		layers[7] = document.getElementById("canvas8");
+		layers[8] = document.getElementById("canvas9");
+		layers[9] = document.getElementById("canvas10");
+		let s_layers = new Array(10);
+		s_layers[0] = document.getElementById("s_canvas1");
+		s_layers[1] = document.getElementById("s_canvas2");
+		s_layers[2] = document.getElementById("s_canvas3");
+		s_layers[3] = document.getElementById("s_canvas4");
+		s_layers[4] = document.getElementById("s_canvas5");
+		s_layers[5] = document.getElementById("s_canvas6");
+		s_layers[6] = document.getElementById("s_canvas7");
+		s_layers[7] = document.getElementById("s_canvas8");
+		s_layers[8] = document.getElementById("s_canvas9");
+		s_layers[9] = document.getElementById("s_canvas10");
+		let canvas = layers[0];
+		let ctx = layers[0].getContext("2d");
+		canvas.style.display = "inline";
+		canvas.style.zIndex = "10";
+		let layer = document.getElementById("layer");
+		let reset = document.getElementById("reset");
+		let eraser = document.getElementById("eraser");
+		let n_layer = document.getElementById("n_layer");
+		let pre_layer = "0";
+
+		let dl = document.getElementById("download");
+
+		let pixel_data = [];
+		let bef_pix;
+		let af_pix;
 
 
 		function update(picker) {
@@ -294,6 +311,24 @@
 			}
 			pen = !pen;
 		});
+
+		dl.addEventListener("pointerdown", function (e) {
+			let dl_canvas = document.createElement("canvas").getContext("2d");
+			dl_canvas.canvas.width = 600;
+			dl_canvas.canvas.height = 600;
+			for (let i = 0; i < 10; i++) {
+				dl_canvas.drawImage(s_layers[i], 0, 0);
+			}
+			dl_canvas.canvas.toBlob(function (blob) {
+				let a = document.createElement("a");
+				a.download = "echaco.png";
+				a.href = URL.createObjectURL(blob);
+				a.target = '_blank';
+				a.click();
+				URL.revokeObjectURL(blob);
+			}, "image/png");
+		});
+
 		/*
 		n_layer.addEventListener("change", function (e) {
 			// canvas.style.display = "none";
@@ -329,11 +364,43 @@
 		layerbtn[8] = document.getElementById("layerbtn9");
 		layerbtn[9] = document.getElementById("layerbtn10");
 
-		for (let i = 0; i < 10; i++) {
-			layerbtn[i].addEventListener("click", function (e) {
-				layerchange(i + 1);
-			});
-		}
+		// for (let i = 0; i < 10; i++) {
+		// 	layerbtn[i].addEventListener("click", function (e) {
+		// 		layerchange(i + 1);
+		// 	});
+		// }
+
+		layerbtn[0].addEventListener("click", function (e) {
+			layerchange(1);
+		});
+		layerbtn[1].addEventListener("click", function (e) {
+			layerchange(2);
+		});
+		layerbtn[2].addEventListener("click", function (e) {
+			layerchange(3);
+		});
+		layerbtn[3].addEventListener("click", function (e) {
+			layerchange(4);
+		});
+		layerbtn[4].addEventListener("click", function (e) {
+			layerchange(5);
+		});
+		layerbtn[5].addEventListener("click", function (e) {
+			layerchange(6);
+		});
+		layerbtn[6].addEventListener("click", function (e) {
+			layerchange(7);
+		});
+		layerbtn[7].addEventListener("click", function (e) {
+			layerchange(8);
+		});
+		layerbtn[8].addEventListener("click", function (e) {
+			layerchange(9);
+		});
+		layerbtn[9].addEventListener("click", function (e) {
+			layerchange(10);
+		});
+
 
 		function buttonClassChange(lArray) {
 			let mylayer = lArray.indexOf(mySocketId);

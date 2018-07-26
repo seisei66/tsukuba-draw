@@ -113,7 +113,7 @@ button:hover {
 .layerbtn button{
             display: block;
             grid-area: side2;
-            width: 75px;
+            width: 85px;
             height: 25px;
 }
 
@@ -196,4 +196,68 @@ button.used-layer {
 #chat{
   grid-area: side3;
   background-color: #f0f0f0;
+}
+
+@media (min-width:600px) and (max-width:999px) {
+  body{
+    -ms-grid-columns: 2fr 1fr 602px;
+    -ms-grid-rows:1fr 602px 3fr;
+  }
+  #chat{
+    -ms-grid-column:1;
+    -ms-grid-column-span:3;
+    -ms-grid-row:3;
+  }
+  body{
+    grid-template-areas:
+    "head head head"
+    "side1 side2 main"
+    "side3 side3 side3";
+    grid-template-columns: 2fr 1fr 602px;
+    grid-auto-rows: 1fr 602px 3fr;
+  }
+  .layerbtn{
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+  .layerbtn button{
+    padding: 0;
+    font-size: 12px;
+    text-align: center;
+    flex:1;
+  }
+  .colors canvas{
+    margin-left: 10px;
+    width: 150px;
+    height: 150px;
+  }
+  #chat{
+    height: 100px;
+    display: flex;
+  }
+}
+@media (max-width: 599px) {
+  body{
+    display: block;
+  }
+  .layerbtn{
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  .layerbtn button{
+    padding: 0;
+    font-size: 9px;
+    text-align: center;
+    flex:1;
+  }
+  #sum{
+    display: none;
+  }
+  .layer{
+    top:600px;
+    left:300px;
+  }
+
 }
