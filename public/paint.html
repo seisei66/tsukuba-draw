@@ -148,12 +148,31 @@
 	 let pen = true;
 	 let esc = 0;
 
+	 		//loading
+
+ 		let loading = document.getElementById("loading");
+ 		let sendCanvasnum;
+ 		let pageLoad = function() {
+ 			let img = new Image();
+ 			let loadCtx = loading.getContext("2d");
+ 			img.src = "/public/images/load.png"
+ 			loading.style.display = "inline";
+ 			loading.style.zIndex = "20";
+ 			loadCtx.drawImage(img, 0, 0);
+ 		}
+ 		let pageLoadFinish = function() {
+ 			loading.style.display = "none";
+ 		}
+
+
+
 		emit = function (name, data) {
 			// json → 文字列に変換して送信する関数
 			socket.emit(name, JSON.stringify(data));
 		};
 
 		window.onload = function () {
+			pageLoad();
 			let user = window.prompt("ユーザー名を入力してください", "");
 			if (!user) {
 				location.href = "/public/index.html";
@@ -177,6 +196,7 @@
 				canvas.style.zIndex = "10";
 				pre_layer = String(layernum);
 				n_layer.value = layernum + 1;
+				pageLoadFinish();
 			})
 
 			//message送信
@@ -206,7 +226,7 @@
 			//レイヤー変更時
 			socket.on("layer changed", function (layerlst) {
 				layer_used = layerlst;
-				console.log(mySocketId,layer_used, layer_used.indexOf(mySocketId));
+				//console.log(mySocketId,layer_used, layer_used.indexOf(mySocketId));
 				let mylayer = layer_used.indexOf(mySocketId);
 				buttonClassChange(layer_used);
 			});
