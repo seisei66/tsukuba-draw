@@ -126,32 +126,64 @@ app.use(function(err, req, res, next) {
 let io = require('socket.io').listen(server);
 let people = [];
 let layerlst = new Array(10);
+let canvaslst = new Array(10);
+let img = new Array(10);
 
+io.set('heartbeat interval', 5000);
+io.set('heartbeat timeout', 15000);
 //ユーザー入室時
 io.sockets.on('connect', socket => {
+
   socket.on('username', username => {
     io.to(socket.id).emit('socketid notice', socket.id);
-    people[socket.id] = username;
+    console.log(Object.keys(people).length);
     let userlist = [];
     let i;
-    for(key in people){
-      userlist.push(people[key]);
-      //console.log(people);
-      //console.log(userlist);
+    let layernotice = function(Callback){
+      io.to(socket.id).emit('layer notice', i);
     }
-    for(i=0; i<10; i++){
-      if(!layerlst[i]) {
-        layerlst[i] = socket.id;
-        break;
+    let searchlayer = function(){
+      if (Object.keys(people).length > 0) {
+        //ユーザーが既にいる場合
+        console.log("いるよ", Object.keys(people).length)
+        for(key in people){
+          io.to(key).emit('get canvas data',socket.id);
+          break;
+        }
+      io.to(socket.id).emit('all canvas data', img);
       }
     }
-    io.to(socket.id).emit('layer notice', i)
-    io.emit('layer changed', layerlst);
-    //console.log(layerlst);
+    let newlayer = function(Callback){
+      //console.log(i, layerlst);
+      io.emit('layer changed', layerlst);
+    }
+    let setlayer = function(Callback){
+      for(i=0; i<10; i++){
+        if(!layerlst[i]) {
+          layerlst[i] = socket.id;
+          break;
+        }
+      }
+    }
+
+    //newlayer(layernotice(setlayer(searchlayer())));
+
+    newlayer(layernotice(setlayer()));
+    people[socket.id] = username;
+    for(id in people){
+      userlist.push(people[id]);
+      console.log(people);
+      //console.log(userlist);
+    };
     io.emit('username', username);
-    io.emit('userlist', userlist);//empty考える
+    io.emit('userlist', userlist);
   });
 
+  socket.on('canvas data', function(canvas) {
+    //canvas = JSON.parse(canvas);
+    //console.dir(canvas);
+    io.to(canvas.id).emit('send canvas data', JSON.stringify({img:canvas.img.data, num:canvas.num}))
+  })
   // チャット内容にユーザ名を追加し全接続先へ送信
   socket.on('chat message', message => {
     //console.log(people[socket.id] + ' : ' + message);
@@ -160,32 +192,35 @@ io.sockets.on('connect', socket => {
 
   //ユーザー退室時
   socket.on('disconnect', function(){
-    //console.log(socket.id) ;
+    console.log(socket.id);
     io.emit('exit user', people[socket.id]);
     delete people[socket.id];
     layerlst[layerlst.indexOf(socket.id)] = void 0;
     io.emit('layer changed', layerlst);
   });
 
-
-//  socket.on('pixel data', pixel_data => {
-//    io.emit('pixel data', JSON.stringify({layer:layerlst.indexOf(socket.id), data:pixel_data}));
-//  });
-
   //描画レイヤー変更時
-  socket.on('layer changed', layernum => {
+  socket.on('layer change', function(num){
+    console.log(layerlst,num,layerlst[layerlst.indexOf(socket.id)]);
     layerlst[layerlst.indexOf(socket.id)] = void 0;
-    layerlst[layernum] = socket.id;
+    layerlst[num] = socket.id;
+    console.log(layerlst);
     io.emit('layer changed', layerlst);
-    //console.log(layerlst);
-  });
+  })
+ // レイヤーデータをサーバに蓄積
+  socket.on('layer data', function(canvas) {
+    canvas.onload = function() {
+      img[canvas.num] = canvas.img;
+    }
+    //console.log('layer change' ,canvas.img)
+  })
 
   //描画データ受信　
   socket.on('pixel data', pixeldata => {
-    //console.log(pixeldata);
-    let pixelset = JSON.stringify({pixel_data:pixeldata, num:layerlst.indexOf(socket.id)+1})//layerとjsonにする
+    let pixelset = JSON.stringify({pixel_data:pixeldata, num:layerlst.indexOf(socket.id)})//layerとjsonにする
     socket.broadcast.emit('pixel data', pixelset);
-  })
+  });
+
 });
 /*
 function io(server) {

@@ -14,7 +14,7 @@
 	<script src="jscolor.js"></script>
 </head>
 
-<body>
+<body id="body">
 	<div class="site">
 		<p>ILLAST SPACE</p>
 	</div>
@@ -33,6 +33,7 @@
 	</div>
 
 	<div id="layer" class="layer">
+		<canvas id="loading" width="600" height="600"></canvas>
 		<canvas id="canvas1" width="600" height="600"></canvas>
 		<canvas id="canvas2" width="600" height="600"></canvas>
 		<canvas id="canvas3" width="600" height="600"></canvas>
@@ -90,91 +91,7 @@
 	</div>
 	<script>
 		//chat
-		var socket = io();
-		emit = function (name, data) {
-			// json → 文字列に変換して送信する関数
-			socket.emit(name, JSON.stringify(data));
-		};
-
-		let mySocketId;
-		let layer_used = new Array(10);
-		window.onload = () => {
-			let msg = document.getElementById("chatarea");
-			let msgList = document.getElementById("msgList");
-			let send = document.getElementById("send");
-			let popupBtn = document.getElementById("popup_btn");
-			let popup = document.getElementById("popup");
-			let user = window.prompt("ユーザー名を入力してください", "");
-			if (!user) {
-				location.href = "/public/index.html";
-			}
-			socket.emit("username", user);//動作確認してない
-			//接続開始
-			socket.on("connect", () => {
-				socket.on("userlist", userlist => {
-					let peoplelist = userlist;
-				});
-				socket.on("socketid notice", id => {
-					mySocketId = id;
-				});
-			})
-			//message送信
-			send.addEventListener("click", e => {
-				if (msg.value != "") {
-					socket.emit("chat message", msg.value);
-					console.log({ text: msg.value });
-					console.log(msg.value);
-					msg.value = "";
-				}
-			});
-			//enterで送信
-			msg.addEventListener("keypress", e => {
-				if (e.keyCode == "13") {
-					if (msg.value != "") {
-						socket.emit("chat message", msg.value);
-						console.log({ text: msg.value });
-						console.log(msg.value);
-						msg.value = "";
-					}
-				}
-			});
-			//新規レイヤー割り当て
-			socket.on("layer notice", layernum => {
-				n_layer.value = layernum + 1;
-			})
-			//message送信
-			socket.on("chat message", data => {
-				let li = document.createElement('li');// liタグ作成
-				li.innerText = data; // liタグに値を入れる
-				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
-			});
-			//レイヤー変更時
-			socket.on("layer changed", layerlst => {
-				layer_used = layerlst;
-				let mylayer = layer_used.indexOf(mySocketId);
-				buttonClassChange(layer_used);
-			});
-			//ユーザー入室時
-			socket.on("username", name => {
-				let liname = document.createElement('li');
-				liname.innerText = name + 'さんが入室しました';
-				msgList.appendChild(liname);
-			});
-			//ユーザー退室時
-			socket.on("exit user", name => {
-				let liexit = document.createElement('li');
-				liexit.innerText = name + 'さんが退室しました';
-				msgList.appendChild(liexit);
-			})
-
-			socket.on("pixel data", pixelset => {
-				pixelset = JSON.parse(pixelset);
-				console.log(pixelset, pixelset.pixel_data, pixelset.num);
-				pix_conv(pixelset.pixel_data, pixelset.num);
-			})
-		};
-		//chatここまで
-
+		let socket = io();
 		let layers = [document.getElementById("canvas1"), document.getElementById("canvas2"), document.getElementById("canvas3"), document.getElementById("canvas4"), document.getElementById("canvas5"), document.getElementById("canvas6"), document.getElementById("canvas7"), document.getElementById("canvas8"), document.getElementById("canvas9"), document.getElementById("canvas10")];
 		let s_layers = [document.getElementById("s_canvas1"), document.getElementById("s_canvas2"), document.getElementById("s_canvas3"), document.getElementById("s_canvas4"), document.getElementById("s_canvas5"), document.getElementById("s_canvas6"), document.getElementById("s_canvas7"), document.getElementById("s_canvas8"), document.getElementById("s_canvas9"), document.getElementById("s_canvas10")];
 		let canvas = layers[0];
@@ -185,6 +102,7 @@
 		let reset = document.getElementById("reset");
 		let eraser = document.getElementById("eraser");
 		let n_layer = document.getElementById("n_layer");
+
 		let pre_layer = "0";
 
 		let pixel_data = [];
@@ -207,6 +125,155 @@
 		let undoImage = [];
 		let pen = true;
 		let esc = 0;
+		let mySocketId;
+		let layer_used = new Array(10);
+
+		emit = function (name, data) {
+			// json → 文字列に変換して送信する関数
+			socket.emit(name, JSON.stringify(data));
+		};
+
+		//loading
+		/*
+		let loading = document.getElementById("loading");
+		let sendCanvasnum;
+		let pageLoad = function() {
+			let img = new Image();
+			let loadCtx = loading.getContext("2d");
+			img.src = "/public/images/load.png"
+			loading.style.display = "inline";
+			loading.style.zIndex = "20";
+			loadCtx.drawImage(img, 0, 0);
+		}
+		let pageLoadFinish = function() {
+			loading.style.display = "none";
+		}
+		pageLoad();
+		*/
+		window.onload = function() {
+			let msg = document.getElementById("chatarea");
+			let msgList = document.getElementById("msgList");
+			let send = document.getElementById("send");
+			let popupBtn = document.getElementById("popup_btn");
+			let popup = document.getElementById("popup");
+			let user = window.prompt("ユーザー名を入力してください", "");
+			if (!user) {
+				location.href = "/public/index.html";
+			}
+			//接続開始
+			socket.on("connect", () => {
+				socket.emit("username", user);
+				//自ID取得
+				socket.on("socketid notice", id => {
+					mySocketId = id;
+				});
+				socket.on("userlist", userlist => {
+					let peoplelist = userlist;
+					//pageLoadFinish();
+				});
+			})
+			//新規レイヤー割り当て
+			socket.on("layer notice", layernum => {
+				//socket.emit("layer changed", layernum);
+				canvas = layers[layernum];
+				ctx = canvas.getContext("2d");
+				canvas.style.display = "inline";
+				canvas.style.zIndex = "10";
+				pre_layer = String(layernum);
+				n_layer.value = layernum + 1;
+			})
+
+			//message送信
+			send.addEventListener("click", e => {
+				if (msg.value != "") {
+					socket.emit("chat message", msg.value);
+					msg.value = "";
+				}
+			});
+			//enterで送信
+			msg.addEventListener("keypress", e => {
+				if (e.keyCode == "13") {
+					if (msg.value != "") {
+						socket.emit("chat message", msg.value);
+						msg.value = "";
+					}
+				}
+			});
+			//message受信
+			socket.on("chat message", data => {
+				let li = document.createElement('li');// liタグ作成
+				li.innerText = data; // liタグに値を入れる
+				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
+			});
+
+			//レイヤー変更時
+			socket.on("layer changed", layerlst => {
+				layer_used = layerlst;
+				console.log(mySocketId,layer_used, layer_used.indexOf(mySocketId));
+				let mylayer = layer_used.indexOf(mySocketId);
+				buttonClassChange(layer_used);
+			});
+
+			//ユーザー入室時
+			socket.on("username", name => {
+				let liname = document.createElement('li');
+				liname.innerText = name + 'さんが入室しました';
+				msgList.appendChild(liname);
+			});
+			//ユーザー退室時
+			socket.on("exit user", name => {
+				let liexit = document.createElement('li');
+				liexit.innerText = name + 'さんが退室しました';
+				msgList.appendChild(liexit);
+			});
+			//pixeldata受信
+			socket.on("pixel data", pixelset => {
+				pixelset = JSON.parse(pixelset);
+				//console.log(pixelset, pixelset.pixel_data, pixelset.num);
+				pix_conv(pixelset.pixel_data, pixelset.num+1);
+			});
+/*
+			socket.on("get canvas data", function(id) {
+				let wid = canvas.width;
+				let hei = canvas.height;
+				socket.emit("canvas data", {img:ctx.getImageData(0, 0, wid, hei), num:n_layer.value - 1, id:id});
+				console.dir(ctx.getImageData(0, 0, wid, hei));
+			});
+			socket.on("clear canvas data", function(id) {
+				let wid = canvas.width;
+				let hei = canvas.height;
+				socket.emit("clear canvas", {img:ctx.getImageData(0, 0, wid, hei), num:n_layer.value - 1, id:id});
+				//console.log("ohoho");
+			});
+			socket.on("send canvas data", function(img) {
+//				console.dir(img);
+				img = JSON.parse(img);
+				let image = new Image();
+				console.dir(image);
+				image.data = Object.keys(img.img)
+				console.dir(image);
+				apply(image, img.num+1);
+				sum(img.num+1);
+			});
+			socket.on("all canvas data", function(img) {
+				//img = JSON.parse(img);
+//				console.log(img);
+				for(let i=0; i<10; i++) {
+					let image = new Image();
+					if(img[i]){
+						image = Object.keys(img)
+						apply(image, i+1);
+						sum(i+1);
+					}
+				}
+
+			})
+*/
+
+		};
+
+		//chatここまで
+
 
 		function update(picker) {
 			r = Math.round(picker.rgb[0]);
@@ -227,7 +294,6 @@
 			}
 			pen = !pen;
 		});
-
 		/*
 		n_layer.addEventListener("change", function (e) {
 			// canvas.style.display = "none";
@@ -285,7 +351,9 @@
 		function layerchange(number) {
 			//console.log("layerchange");
 			if (!layer_used[number - 1]) {
-				socket.emit("layer changed", number - 1);
+				let img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				console.log(number);
+				socket.emit("layer change", number-1);
 				canvas.style.display = "none";
 				canvas.style.zIndex = pre_layer;
 				canvas = layers[number - 1];
@@ -293,6 +361,7 @@
 				canvas.style.display = "inline";
 				canvas.style.zIndex = "10";
 				pre_layer = String(number - 1);
+				socket.emit("layer data", {img:img, num:n_layer.value});
 				n_layer.value = number;
 			} else {
 				n_layer.value = layer_used.indexOf(mySocketId) + 1;
@@ -453,7 +522,7 @@
 			af_pix = e.data.af_pix;
 			if (multi)
 				setTimeout("get_pix()", 200);
-			socket.emit("canvas data", ctx.getImageData(0, 0, canvas.width, canvas.height));
+			//socket.emit("canvas data", ctx.getImageData(0, 0, canvas.width, canvas.height));
 		}
 
 
@@ -484,6 +553,8 @@
 			layers[num - 1].getContext('2d').putImageData(pixels, 0, 0);
 			layers[num - 1].style.display = "none";
 		}
+//インデント崩壊祭り
+
 	</script>
 
 </body>
