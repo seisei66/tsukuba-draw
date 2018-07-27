@@ -192,12 +192,12 @@
 			socket.emit(name, JSON.stringify(data));
 		};
 
+		let dimg = new Image();
+		img="/public/images/exitdoor.png"
+		img.onload = function(){
+			door.src = img;
+		}
 		window.onload = function () {
-			let dimg = new Image();
-			img="/public/images/exitdoor.png"
-			img.onload = function(){
-				door.src = img;
-			}
 			pageLoad();
 			let user = window.prompt("ユーザー名を入力してください", "");
 			console.log(user);
