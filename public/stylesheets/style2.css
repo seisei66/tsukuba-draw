@@ -132,6 +132,7 @@ button:hover {
 #exit {
   text-align: center;
   width: 100px;
+  border:0;
 }
 @supports (display:grid) {
   .layer canvas{
