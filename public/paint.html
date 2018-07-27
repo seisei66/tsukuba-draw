@@ -200,6 +200,7 @@
 			}
 			//接続開始
 			socket.on("connect", function () {
+				console.log("connect";)
 				socket.emit("username", user);
 				socket.on("userlist", function (userlist) {
 					peoplelist = userlist;
