@@ -193,9 +193,9 @@
 		};
 
 		let dimg = new Image();
-		dimg="/public/images/exitdoor.png"
+		dimg.src　="/public/images/exitdoor.png"
 		dimg.onload = function(){
-			door.src = dimg;
+			door.src = dimg.src;
 		}
 		window.onload = function () {
 			pageLoad();
