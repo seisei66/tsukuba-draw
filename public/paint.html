@@ -86,7 +86,7 @@
 	</div>
 	<footer id="footer1">
 		<nav>
-		<button type="button" id="exit"><img src="/public/images/exitdoor.png" alt="exit" /></button>
+		<button type="button" id="exit"><img id="door" alt="exit" /></button>
 		</nav>
 	</footer>
 	<footer id="footer2">
@@ -170,6 +170,7 @@
 
  		let loading = document.getElementById("loading");
  		let sendCanvasnum;
+		let door = document.getElementById("door");
  		let pageLoad = function() {
  			let img = new Image();
  			let loadCtx = loading.getContext("2d");
@@ -192,6 +193,11 @@
 		};
 
 		window.onload = function () {
+			let dimg = new Image();
+			img="/public/images/exitdoor.png"
+			img.onload = function(){
+				door.src = img;
+			}
 			pageLoad();
 			let user = window.prompt("ユーザー名を入力してください", "");
 			console.log(user);
