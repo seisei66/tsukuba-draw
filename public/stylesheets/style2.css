@@ -2,7 +2,7 @@
 body  {
        display: -ms-grid;
        -ms-grid-columns:2fr 1fr 602px 2fr;
-       -ms-grid-rows:1fr 602px 10px;
+       -ms-grid-rows:1fr 602px 20px;
      }
 .site {
        -ms-grid-column:1;
@@ -32,6 +32,11 @@ body  {
   -ms-grid-row:2;
   background-color: #f0f0f0;
 }
+footer{
+	-ms-grid-column:1;
+	-ms-grid-column-span:4;
+        -ms-grid-row:3;}
+
 /*IE用ここまで*/
 /*モダンここから*/
 
@@ -106,6 +111,8 @@ button:hover {
     left: -300px;
   }
 }
+footer{
+	grid-area:foot;}
 .layer canvas {
             border: solid 2px #67c5ff;
             position: absolute;
