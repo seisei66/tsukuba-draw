@@ -135,41 +135,45 @@ io.set('heartbeat timeout', 15000);
 io.sockets.on('connect', socket => {
 
   socket.on('username', username => {
-    io.to(socket.id).emit('socketid notice', socket.id);
-    let userlist = [];
-    let i;
-    let layernotice = function(Callback){
-      io.to(socket.id).emit('layer notice', i);
-    }
-    let searchlayer = function(){
-      if (Object.keys(people).length > 0) {
-        //ユーザーが既にいる場合
-        for(key in people){
-          io.to(key).emit('get canvas data',socket.id);
-          break;
-        }
-      io.to(socket.id).emit('all canvas data', img);
+    if(people.length < 5) {
+      io.to(socket.id).emit('socketid notice', socket.id);
+      let userlist = [];
+      let i;
+      let layernotice = function(Callback){
+        io.to(socket.id).emit('layer notice', i);
       }
-    }
-    let newlayer = function(Callback){
-      //console.log(i, layerlst);
-      io.emit('layer changed', layerlst);
-    }
-    let setlayer = function(Callback){
-      for(i=0; i<10; i++){
-        if(!layerlst[i]) {
-          layerlst[i] = socket.id;
-          break;
+      let searchlayer = function(){
+        if (Object.keys(people).length > 0) {
+          //ユーザーが既にいる場合
+          for(key in people){
+            io.to(key).emit('get canvas data',socket.id);
+            break;
+          }
+        io.to(socket.id).emit('all canvas data', img);
         }
       }
+      let newlayer = function(Callback){
+        //console.log(i, layerlst);
+        io.emit('layer changed', layerlst);
+      }
+      let setlayer = function(Callback){
+        for(i=0; i<10; i++){
+          if(!layerlst[i]) {
+            layerlst[i] = socket.id;
+            break;
+          }
+        }
+      }
+      newlayer(layernotice(setlayer()));
+      people[socket.id] = username;
+      for(id in people){
+        userlist.push(people[id]);
+      };
+      io.emit('username', username);
+      io.emit('userlist', userlist);
+    } else {
+      io.emit('cannot enter');
     }
-    newlayer(layernotice(setlayer()));
-    people[socket.id] = username;
-    for(id in people){
-      userlist.push(people[id]);
-    };
-    io.emit('username', username);
-    io.emit('userlist', userlist);
   });
 
   socket.on('canvas data', function(canvas) {

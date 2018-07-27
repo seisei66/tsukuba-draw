@@ -106,6 +106,7 @@
 		let socket = io();
 		let mySocketId;
 		let layer_used = new Array(10);
+		let peoplelist = [];
 		let msg = document.getElementById("chatarea");
 		let msgList = document.getElementById("msgList");
 		let send = document.getElementById("send");
@@ -193,6 +194,7 @@
 		window.onload = function () {
 			pageLoad();
 			let user = window.prompt("ユーザー名を入力してください", "");
+			console.log(user);
 			if (!user) {
 				location.href = "/public/index.html";
 			}
@@ -200,12 +202,18 @@
 			socket.on("connect", function () {
 				socket.emit("username", user);
 				socket.on("userlist", function (userlist) {
-					let peoplelist = userlist;
+					peoplelist = userlist;
+					console.log("userlist ", userlist);
 				});
 				socket.on("socketid notice", function (id) {
 					mySocketId = id;
+					console.log("id ", id);
 				});
-			})
+			});
+			socket.on("cannot enter", function() {
+				window.alert("ユーザー数が上限に達しました");
+				window.location.href = '/public/index.html';
+			});
 			//新規レイヤー割り当て
 			socket.on("layer notice", function(layernum) {
 				//socket.emit("layer changed", layernum);
