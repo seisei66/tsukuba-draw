@@ -275,7 +275,7 @@
 			socket.on("pixel data", function (pixelset) {
 				pixelset = JSON.parse(pixelset);
 				//console.log(pixelset, pixelset.pixel_data, pixelset.num);
-				pix_conv(pixelset.pixel_data, pixelset.num);
+				pix_conv(pixelset.pixel_data, pixelset.num+1);
 			})
 		};
 		/*
