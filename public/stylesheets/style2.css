@@ -2,8 +2,9 @@
 body  {
        display: -ms-grid;
        -ms-grid-columns:2fr 1fr 602px 2fr;
-       -ms-grid-rows:1fr 602px 20px;
+       -ms-grid-rows:1fr 602px 2fr;
      }
+
 .site {
        -ms-grid-column:1;
 	     -ms-grid-column-span:4;
@@ -32,10 +33,22 @@ body  {
   -ms-grid-row:2;
   background-color: #f0f0f0;
 }
-footer{
+#footer1{
 	-ms-grid-column:1;
-	-ms-grid-column-span:4;
-        -ms-grid-row:3;}
+  -ms-grid-row:3;
+}
+#footer2{
+  	-ms-grid-column:2;
+    -ms-grid-row:3;
+}
+#footer3{
+  	-ms-grid-column:3;
+    -ms-grid-row:3;
+}
+#footer4{
+  	-ms-grid-column:4;
+    -ms-grid-row:3;
+}
 
 /*IE用ここまで*/
 /*モダンここから*/
@@ -44,14 +57,25 @@ body  {display: grid;
       grid-template-areas:
                 "head head head head"
                 "side1 side2 main side3"
-                "foot foot foot foot";
+                "foot1 foot2 foot3 foot4";
       grid-template-columns: 3fr 1fr 602px 2fr;
-      grid-template-rows: 1fr 600px 10px;
+      grid-template-rows: 1fr 600px 2fr;
        margin: 0;
        font-family: 'Source Sans Pro', 'メイリオ',
        'Hiragino Kaku Gothic Pro', sans-serif;
        }
-
+#fotter1 {
+      grid-area: foot1;
+}
+#fotter2 {
+      grid-area: foot2;
+}
+#fotter3 {
+      grid-area: foot3;
+}
+#fotter4 {
+      grid-area: foot4;
+}
 .site  {
        grid-area: head;
        background-color: #67c5ff;
@@ -105,14 +129,21 @@ button:hover {
             grid-area: main;
             position: relative;
 }
+#exit {
+  text-align: center;
+  width: 100px;
+}
 @supports (display:grid) {
   .layer canvas{
     top: -300px;
     left: -300px;
   }
 }
-footer{
-	grid-area:foot;}
+.footer{
+	grid-area:foot1;
+  display: inline-block;
+}
+
 .layer canvas {
             border: solid 2px #67c5ff;
             position: absolute;
@@ -145,7 +176,7 @@ button.used-layer {
             text-decoration: none;
             list-style: none;
             padding: 5px 10px;
-            height: 500px; 
+            height: 500px;
             overflow:auto;
 }
 .colors button {
@@ -222,7 +253,7 @@ button.used-layer {
     grid-template-areas:
     "head head head"
     "side1 side2 main"
-    "side3 side3 side3";
+    "foot1 foot2 foot3";
     grid-template-columns: 2fr 1fr 602px;
     grid-auto-rows: 1fr 602px 3fr;
   }
@@ -250,6 +281,18 @@ button.used-layer {
 @media (max-width: 599px) {
   body{
     display: block;
+  }
+  #fotter1 {
+        grid-area: foot1;
+  }
+  #fotter2 {
+        grid-area: foot2;
+  }
+  #fotter3 {
+        grid-area: foot2;
+  }
+  #fotter4 {
+        grid-area: foot3;
   }
   .layerbtn{
     display: flex;

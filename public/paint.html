@@ -84,11 +84,21 @@
 		</div>
 		<div id="clients"></div>
 	</div>
-	<footer>
+	<footer id="footer1">
 		<nav>
-		<a href="index.html">トップページ</a>
-		<p>Developed by Oka & Saito & Sei</p>
-		<a href="https://github.com/seisei66/tsukuba-draw">Github</a>
+		<button type="button" id="exit">Exit</button>
+		</nav>
+	</footer>
+	<footer id="footer2">
+		<nav></nav>
+	</footer>
+	<footer id="footer3">
+		<nav></nav>
+	</footer>
+	<footer id="footer4">
+		<nav>
+		<p>Developed by <br> Oka & Saito & Sei</p>
+		<!--<a href="https://github.com/seisei66/tsukuba-draw">Github</a>-->
 		</nav>
 	</footer>
 	<script>
@@ -165,13 +175,15 @@
  			img.src = "/public/images/load.png"
  			loading.style.display = "inline";
  			loading.style.zIndex = "20";
- 			loadCtx.drawImage(img, 0, 0);
+			img.onload = function() {
+				loadCtx.drawImage(img, 0, 0);
+			}
  		}
+
  		let pageLoadFinish = function() {
  			loading.style.display = "none";
+			console.log("load finished");
  		}
-
-
 
 		emit = function (name, data) {
 			// json → 文字列に変換して送信する関数
@@ -203,7 +215,7 @@
 				canvas.style.zIndex = "10";
 				pre_layer = String(layernum);
 				n_layer.value = layernum + 1;
-				pageLoadFinish();
+				setTimeout(pageLoadFinish, 2000);
 			})
 
 			//message送信
@@ -296,6 +308,9 @@
 		*/
 		//chatここまで
 
+		exit.addEventListener("click", function (e) {
+			window.location.href = '/public/index.html';
+		});
 
 		function update(picker) {
 			r = Math.round(picker.rgb[0]);
