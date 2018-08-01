@@ -184,7 +184,7 @@
 
  		let pageLoadFinish = function() {
  			loading.style.display = "none";
-			console.log("load finished");
+			//console.log("load finished");
  		}
 
 		emit = function (name, data) {
@@ -200,21 +200,21 @@
 		window.onload = function () {
 			pageLoad();
 			let user = window.prompt("ユーザー名を入力してください", "");
-			console.log(user);
+			//console.log(user);
 			if (!user) {
 				location.href = "/public/index.html";
 			}
 			//接続開始
 			socket.on("connect", function () {
-				console.log("connect");
+				//console.log("connect");
 				socket.emit("username", user);
 				socket.on("userlist", function (userlist) {
 					peoplelist = userlist;
-					console.log("userlist ", userlist);
+					//console.log("userlist ", userlist);
 				});
 				socket.on("socketid notice", function (id) {
 					mySocketId = id;
-					console.log("id ", id);
+					//console.log("id ", id);
 				});
 			});
 			socket.on("cannot enter", function() {
