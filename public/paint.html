@@ -86,7 +86,9 @@
 	</div>
 	<footer id="footer1">
 		<nav>
-		<button type="button" id="exit"><img id="door" alt="exit" /></button>
+			<button type="button" id="exit">
+				<img id="door" alt="exit" />
+			</button>
 		</nav>
 	</footer>
 	<footer id="footer2">
@@ -97,8 +99,9 @@
 	</footer>
 	<footer id="footer4">
 		<nav>
-		<p>Developed by <br> Oka & Saito & Sei</p>
-		<!--<a href="https://github.com/seisei66/tsukuba-draw">Github</a>-->
+			<p>Developed by
+				<br> Oka &amp; Saito &amp; Sei</p>
+			<a href="https://github.com/seisei66/tsukuba-draw">GitHub</a>
 		</nav>
 	</footer>
 	<script>
@@ -149,43 +152,43 @@
 		let bef_pix;
 		let af_pix;
 
-	 let mouseX, mouseY;
-	 let draw_f = false;
-	 let multi = false;
-	 let f_reset = false;
-	 let buffx = [];
-	 let buffy = [];
-	 let last = 0;
-	 let _last = 0;
-	 let last_undo = -1;
-	 let alpha = 0;
-	 let r = 0;
-	 let g = 0;
-	 let b = 0;
-	 let undoImage = [];
-	 let pen = true;
-	 let esc = 0;
+		let mouseX, mouseY;
+		let draw_f = false;
+		let multi = false;
+		let f_reset = false;
+		let buffx = [];
+		let buffy = [];
+		let last = 0;
+		let _last = 0;
+		let last_undo = -1;
+		let alpha = 0;
+		let r = 0;
+		let g = 0;
+		let b = 0;
+		let undoImage = [];
+		let pen = true;
+		let esc = 0;
 
-	 		//loading
+		//loading
 
- 		let loading = document.getElementById("loading");
- 		let sendCanvasnum;
+		let loading = document.getElementById("loading");
+		let sendCanvasnum;
 		let door = document.getElementById("door");
- 		let pageLoad = function() {
- 			let img = new Image();
- 			let loadCtx = loading.getContext("2d");
- 			img.src = "/public/images/load.png"
- 			loading.style.display = "inline";
- 			loading.style.zIndex = "20";
-			img.onload = function() {
+		let pageLoad = function () {
+			let img = new Image();
+			let loadCtx = loading.getContext("2d");
+			img.src = "/public/images/load.png"
+			loading.style.display = "inline";
+			loading.style.zIndex = "20";
+			img.onload = function () {
 				loadCtx.drawImage(img, 0, 0);
 			}
- 		}
+		}
 
- 		let pageLoadFinish = function() {
- 			loading.style.display = "none";
+		let pageLoadFinish = function () {
+			loading.style.display = "none";
 			console.log("load finished");
- 		}
+		}
 
 		emit = function (name, data) {
 			// json → 文字列に変換して送信する関数
@@ -193,97 +196,105 @@
 		};
 
 		let dimg = new Image();
-		dimg.src　="/public/images/exitdoor.png"
-		dimg.onload = function(){
+		dimg.src = "/public/images/exitdoor.png"
+		dimg.onload = function () {
 			door.src = dimg.src;
 		}
+		let user;
+
+		user = window.prompt("ユーザー名を入力してください", "");
 		window.onload = function () {
 			pageLoad();
-			let user = window.prompt("ユーザー名を入力してください", "");
-			console.log(user);
+
 			if (!user) {
 				location.href = "/public/index.html";
-			}
-			//接続開始
-			socket.on("connect", function () {
-				console.log("connect");
+			} else {
 				socket.emit("username", user);
-				socket.on("userlist", function (userlist) {
-					peoplelist = userlist;
-					console.log("userlist ", userlist);
-				});
-				socket.on("socketid notice", function (id) {
-					mySocketId = id;
-					console.log("id ", id);
-				});
-			});
-			socket.on("cannot enter", function() {
-				window.alert("ユーザー数が上限に達しました");
-				window.location.href = '/public/index.html';
-			});
-			//新規レイヤー割り当て
-			socket.on("layer notice", function(layernum) {
-				//socket.emit("layer changed", layernum);
-				canvas = layers[layernum];
-				ctx = canvas.getContext("2d");
-				canvas.style.display = "inline";
-				canvas.style.zIndex = "10";
-				pre_layer = String(layernum);
-				n_layer.value = layernum + 1;
-				setTimeout("pageLoadFinish()", 2000);
-			})
+			}
+		};
+		//接続開始
+		socket.on("connect", function () {
+			console.log("connect");
 
-			//message送信
-			send.addEventListener("click", function (e) {
+		});
+		socket.on("userlist", function (userlist) {
+			peoplelist = userlist;
+			console.log("userlist ", userlist);
+		});
+		socket.on("socketid notice", function (id) {
+			mySocketId = id;
+			console.log("id ", id);
+		});
+		socket.on("cannot enter", function (id) {
+			//if (id == mySocketId) {
+			window.alert("ユーザー数が上限に達しました");
+			window.location.href = '/public/index.html';
+			//}
+		});
+		//新規レイヤー割り当て
+		socket.on("layer notice", function (layernum) {
+			//socket.emit("layer changed", layernum);
+			layerchange(layernum + 1);
+			// canvas = layers[layernum];
+			// ctx = canvas.getContext("2d");
+			// canvas.style.display = "inline";
+			// canvas.style.zIndex = "10";
+			// pre_layer = String(layernum);
+			// n_layer.value = layernum + 1;
+			setTimeout("pageLoadFinish()", 2000);
+		})
+
+		//message送信
+		send.addEventListener("click", function (e) {
+			if (msg.value != "") {
+				socket.emit("chat message", msg.value);
+				msg.value = "";
+			}
+		});
+		//enterで送信
+		msg.addEventListener("keypress", function (e) {
+			if (e.keyCode == "13") {
 				if (msg.value != "") {
 					socket.emit("chat message", msg.value);
 					msg.value = "";
 				}
-			});
-			//enterで送信
-			msg.addEventListener("keypress", function (e) {
-				if (e.keyCode == "13") {
-					if (msg.value != "") {
-						socket.emit("chat message", msg.value);
-						msg.value = "";
-					}
-				}
-			});
+			}
+		});
 
-			//message受信
-			socket.on("chat message", function (data) {
-				let li = document.createElement('li');// liタグ作成
-				li.innerText = data; // liタグに値を入れる
-				msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
-			});
+		//message受信
+		socket.on("chat message", function (data) {
+			let li = document.createElement('li');// liタグ作成
+			li.innerText = data; // liタグに値を入れる
+			msgList.appendChild(li); // ulタグの子ノードとして作成したliタグを追加
+		});
 
-			//レイヤー変更時
-			socket.on("layer changed", function (layerlst) {
-				layer_used = layerlst;
-				//console.log(mySocketId,layer_used, layer_used.indexOf(mySocketId));
-				let mylayer = layer_used.indexOf(mySocketId);
-				buttonClassChange(layer_used);
-			});
+		//レイヤー変更時
+		socket.on("layer changed", function (layerlst) {
+			layer_used = layerlst;
+			//console.log(mySocketId,layer_used, layer_used.indexOf(mySocketId));
+			let mylayer = layer_used.indexOf(mySocketId);
+			buttonClassChange(layer_used);
+		});
 
-			//ユーザー入室時
-			socket.on("username", function (name) {
-				let liname = document.createElement('li');
-				liname.innerText = name + 'さんが入室しました';
-				msgList.appendChild(liname);
-			});
-			//ユーザー退室時
-			socket.on("exit user", function (name) {
-				let liexit = document.createElement('li');
-				liexit.innerText = name + 'さんが退室しました';
-				msgList.appendChild(liexit);
-			})
+		//ユーザー入室時
+		socket.on("username", function (name) {
+			let liname = document.createElement('li');
+			liname.innerText = name + 'さんが入室しました';
+			msgList.appendChild(liname);
+		});
+		//ユーザー退室時
+		socket.on("exit user", function (name) {
+			let liexit = document.createElement('li');
+			liexit.innerText = name + 'さんが退室しました';
+			msgList.appendChild(liexit);
+		})
 
-			socket.on("pixel data", function (pixelset) {
-				pixelset = JSON.parse(pixelset);
-				//console.log(pixelset, pixelset.pixel_data, pixelset.num);
-				pix_conv(pixelset.pixel_data, pixelset.num+1);
-			})
-		};
+		socket.on("pixel data", function (pixelset) {
+			pixelset = JSON.parse(pixelset);
+			//console.log(pixelset, pixelset.pixel_data, pixelset.num);
+			pix_conv(pixelset.pixel_data, pixelset.num + 1);
+		})
+		//};
 		/*
 					socket.on("get canvas data", function(id) {
 						let wid = canvas.width;
@@ -455,7 +466,7 @@
 			if (!layer_used[number - 1]) {
 				let img = ctx.getImageData(0, 0, canvas.width, canvas.height);
 				console.log(number);
-				socket.emit("layer change", number-1);
+				socket.emit("layer change", number - 1);
 				canvas.style.display = "none";
 				canvas.style.zIndex = pre_layer;
 				canvas = layers[number - 1];
@@ -463,7 +474,7 @@
 				canvas.style.display = "inline";
 				canvas.style.zIndex = "10";
 				pre_layer = String(number - 1);
-				socket.emit("layer data", {img:img, num:n_layer.value});
+				socket.emit("layer data", { img: img, num: n_layer.value });
 				n_layer.value = number;
 			} else {
 				n_layer.value = layer_used.indexOf(mySocketId) + 1;
